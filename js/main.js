@@ -1,2 +1,2 @@
-import {createObject} from './generating-data.js';
-createObject();
+import {generateSimilarAdvertisement} from './generate_similars.js';
+generateSimilarAdvertisement();

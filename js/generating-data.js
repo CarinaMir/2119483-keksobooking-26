@@ -1,9 +1,9 @@
 import {getRandomPositiveFloat, getRandomPositiveInteger, getValueToString} from './utils.js';
-import {TITLE, TYPES, PERIODS, FEATURES, DESCRIPTION, PHOTO_URLS, MAX_AMOUNT, MAX_PRICE, MAX_DIGITS, MAX_AVATAR, MIN_LAT, MAX_LAT, MIN_LNG, MAX_LNG} from './constants.js';
+import {TITLE, TYPES, PERIODS, FEATURES, DESCRIPTION, PHOTO_URLS, MAX_AMOUNT, MAX_PRICE, MAX_DIGITS, MIN_LAT, MAX_LAT, MIN_LNG, MAX_LNG, ADEVERTISMENT_AMOUNT} from './constants.js';
 
-function getAuthor() {
+function getAuthor(value) {
   return {
-    avatar: `img/avatars/user${getValueToString(getRandomPositiveInteger(1, MAX_AVATAR))}.png`
+    avatar: `img/avatars/user${getValueToString(value)}.png`
   };
 }
 
@@ -34,13 +34,21 @@ function getLocation() {
   };
 }
 
-export function createObject () {
+export function createObject(value) {
   const locality = getLocation();
   return {
-    author: getAuthor(),
+    author: getAuthor(value),
     offer: getOffer(locality),
     location: locality
   };
+}
+
+export function generatedAdvertisementData() {
+  const advertisementItems = [];
+  for (let i = 0; i < ADEVERTISMENT_AMOUNT; i++) {
+    advertisementItems.push(createObject(i + 1));
+  }
+  return advertisementItems;
 }
 
 
