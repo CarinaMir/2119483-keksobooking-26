@@ -121,7 +121,7 @@ fieldset {
   opacity: 1;
 }
 
-.map__filters--disabled {
+.map__filters:disabled {
   opacity: 0.5;
   pointer-events: none;
 }
@@ -137,11 +137,11 @@ fieldset {
   border: 1px solid transparent;
 }
 
-.map__filter:hover {
+.map__filter:not(:disabled):hover {
   border: 1px solid #ffaa99;
 }
 
-.map__filter:focus {
+.map__filter:not(:disabled):focus {
   outline: none;
   -webkit-box-shadow: 0 0 2px 2px #ff6547;
           box-shadow: 0 0 2px 2px #ff6547;
@@ -238,6 +238,13 @@ fieldset {
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
 }
 
+.map__feature_inactive {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  pointer-events: none;
+  background-color: rgb(170, 170, 170);
+
+}
 
 /* Форма для публикации объявления
    ========================================================================== */
