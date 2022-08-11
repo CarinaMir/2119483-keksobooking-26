@@ -16,3 +16,11 @@ export const MIN_LAT = 35.65000;
 export const MAX_LAT = 35.70000;
 export const MIN_LNG = 139.70000;
 export const MAX_LNG = 139.80000;
+export const RENAME_TYPES = {
+  'flat': 'Квартира',
+  'bungalow': 'Бунгало',
+  'house': 'Дом',
+  'palace':'Дворец',
+  'hotel': 'Отель'
+};
+export const ADEVERTISMENT_AMOUNT = 10;
