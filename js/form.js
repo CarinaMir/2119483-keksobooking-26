@@ -13,14 +13,18 @@ export function setInactiveState() {
       mapItem.disabled = true;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      [...mapItem.childNodes].forEach((item) => {
-        if (item.tagName === 'LABEL') {
-          item.classList.add('map__feature_inactive');
-        }
-      });
+      setStatusToChildNode(mapItem, 'LABEL', 'add', 'map__feature_inactive');
     }
   });
   mapElement.disabled = true;
+}
+
+function setStatusToChildNode(parentItem, tagName, status, className) {
+  [...parentItem.childNodes].forEach((item) => {
+    if (item.tagName === tagName) {
+      return status === 'remove' ? item.classList.remove(className) : item.classList.add(className);
+    }
+  });
 }
 
 export function setActiveState() {
@@ -33,11 +37,7 @@ export function setActiveState() {
       mapItem.disabled = false;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      [...mapItem.childNodes].forEach((item) => {
-        if (item.tagName === 'LABEL') {
-          item.classList.remove('map__feature_inactive');
-        }
-      });
+      setStatusToChildNode(mapItem, 'LABEL', 'remove', 'map__feature_inactive');
     }
   });
   mapElement.disabled = false;
