@@ -6,6 +6,10 @@ const advertismentPriceElement = formElement.querySelector('#price');
 const advertismentRoomElement = formElement.querySelector('#room_number');
 const advertismentGuestElement = formElement.querySelector('#capacity');
 const advertismentSliderElement = formElement.querySelector('.ad-form__slider');
+const advertismentTypeElement = formElement.querySelector('#type');
+const advertismentTimeinElement = formElement.querySelector('#timein');
+const advertismentTimeoutElement = formElement.querySelector('#timeout');
+
 const defaultConfig = {
   classTo: 'ad-form__element',
   errorClass: 'has-danger',
@@ -41,6 +45,79 @@ advertismentPriceElement.addEventListener('change', changePriceHandler);
 
 function changePriceHandler() {
   advertismentSliderElement.noUiSlider.set(advertismentPriceElement.value);
+}
+
+advertismentTypeElement.addEventListener('change', typeChangedHandler);
+
+function getSliderOptions(value) {
+  switch(value) {
+    case 'bungalow':
+      return {
+        range: {
+          min: 0,
+          max: 100000
+        },
+        start: 0,
+        step: 1000
+      };
+    case 'flat':
+      return {
+        range: {
+          min: 1000,
+          max: 100000
+        },
+        start: 1000,
+        step: 1000
+      };
+    case 'hotel':
+      return {
+        range: {
+          min: 3000,
+          max: 100000
+        },
+        start: 3000,
+        step: 1000
+      };
+    case 'house':
+      return {
+        range: {
+          min: 5000,
+          max: 100000
+        },
+        start: 5000,
+        step: 1000
+      };
+    case 'palace':
+      return {
+        range: {
+          min: 10000,
+          max: 100000
+        },
+        start: 10000,
+        step: 1000
+      };
+  }
+}
+
+function typeChangedHandler(evt) {
+  const value = getSliderOptions(evt.target.value);
+  advertismentSliderElement.noUiSlider.updateOptions(value);
+  advertismentSliderElement.noUiSlider.set(value.range.min);
+  advertismentPriceElement.placeholder = value.range.min;
+}
+
+advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
+
+function setAppropriateTimeinValueHander() {
+  const timein = advertismentTimeinElement.value;
+  advertismentTimeoutElement.value = timein;
+}
+
+advertismentTimeoutElement.addEventListener('change', setAppropriateTimeoutValueHander);
+
+function setAppropriateTimeoutValueHander() {
+  const timeout = advertismentTimeoutElement.value;
+  advertismentTimeinElement.value = timeout;
 }
 
 function getMessageByValidatingGuestByRoom() {
