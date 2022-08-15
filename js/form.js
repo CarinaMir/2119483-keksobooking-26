@@ -54,9 +54,9 @@ function submitFormHandler(evt) {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid){
-    console.log('valid');
+    //'valid'
   } else {
-    console.log('invalid');
+    //'invalid'
   }
 }
 
