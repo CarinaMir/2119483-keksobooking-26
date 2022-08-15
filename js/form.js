@@ -1,3 +1,5 @@
+import { pristine } from './validating.js';
+
 const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormNodes = [...advertisementFormElement.childNodes];
 const mapElement = document.querySelector('.map__filters');
@@ -27,6 +29,9 @@ function setStatusToChildNode(parentItem, tagName, status, className) {
   });
 }
 
+const formElement = document.querySelector('.ad-form');
+const buttonSubmitElement = formElement.querySelector('.ad-form__submit');
+
 export function setActiveState() {
   advertisementFormElement.classList.remove('ad-form--disabled');
   advertisementFormNodes.forEach((item) => {
@@ -41,5 +46,17 @@ export function setActiveState() {
     }
   });
   mapElement.disabled = false;
+}
+
+buttonSubmitElement.addEventListener('click', submitFormHandler);
+
+function submitFormHandler(evt) {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid){
+    console.log('valid');
+  } else {
+    console.log('invalid');
+  }
 }
 

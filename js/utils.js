@@ -15,3 +15,12 @@ export function getRandomPositiveInteger (firstValue, secondValue) {
 export function getValueToString(value){
   return value < 10 ? `0${ value}` : value;
 }
+
+export function validateTitleLenght(value) {
+  return !!value && value.length >= 30 && value.length <= 100;
+}
+
+export function validatePrice(value) {
+  return !!value && value <= 100000;
+}
+

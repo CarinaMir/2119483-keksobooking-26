@@ -1042,3 +1042,18 @@ fieldset {
 .hidden {
   display: none;
 }
+
+#room_number + .pristine-error {
+  margin-right: -100%;
+  padding-right: 20px;
+}
+
+#capacity + .pristine-error {
+  margin-left: -100%;
+  padding-right: 20px;
+}
+
+.pristine-error.text-help {
+  color: red;
+  font-size: 12px;
+}
