@@ -47,7 +47,14 @@ function changePriceHandler() {
   advertismentSliderElement.noUiSlider.set(advertismentPriceElement.value);
 }
 
-advertismentTypeElement.addEventListener('change', typeChangedHandler);
+advertismentTypeElement.addEventListener('change', changeTypeHandler);
+
+function changeTypeHandler(evt) {
+  const value = getSliderOptions(evt.target.value);
+  advertismentSliderElement.noUiSlider.updateOptions(value);
+  advertismentSliderElement.noUiSlider.set(value.range.min);
+  advertismentPriceElement.placeholder = value.range.min;
+}
 
 function getSliderOptions(value) {
   switch(value) {
@@ -99,13 +106,6 @@ function getSliderOptions(value) {
   }
 }
 
-function typeChangedHandler(evt) {
-  const value = getSliderOptions(evt.target.value);
-  advertismentSliderElement.noUiSlider.updateOptions(value);
-  advertismentSliderElement.noUiSlider.set(value.range.min);
-  advertismentPriceElement.placeholder = value.range.min;
-}
-
 advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
 
 function setAppropriateTimeinValueHander() {
@@ -128,7 +128,7 @@ function getMessageByValidatingGuestByRoom() {
     message = 'Корректный варинат выбора: 1 комната — «для 1 гостя»';
   } else if (roomValue === 2 && (guestValue > 2 || guestValue <= 1)) {
     message = 'Корректный варинат выбора: 2 комнаты — «для 2 гостей» или «для 1 гостя»;';
-  }else if (roomValue === 3 && (guestValue > 3 || guestValue <= 1)) {
+  } else if (roomValue === 3 && (guestValue > 3 || guestValue <= 1)) {
     message = 'Корректный варинат выбора: 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»';
   } else if (roomValue === 100 && guestValue !== 0){
     message = 'Корректный варинат выбора: 100 комнат — «не для гостей»';
@@ -139,12 +139,12 @@ function getMessageByValidatingGuestByRoom() {
 function validateGuestsByRoom() {
   const roomValue = +advertismentRoomElement.value;
   const guestValue = +advertismentGuestElement.value;
-  if (
-    (roomValue === 1 && guestValue === 1) ||
-    (roomValue === 2  && (guestValue <= 2 && guestValue > 0)) ||
-    (roomValue === 3  && (guestValue <= 3 && guestValue > 0)) ||
-    (roomValue === 100 && guestValue === 0)
-  ) {
+  const roomForGuest = (roomValue === 1 && guestValue === 1);
+  const twoRoomsForGuests = (roomValue === 2  && (guestValue <= 2 && guestValue > 0));
+  const threeRoomsForGuests = (roomValue === 3  && (guestValue <= 3 && guestValue > 0));
+  const hundredRoomsNotForGuests = (roomValue === 100 && guestValue === 0);
+  const isMatched = roomForGuest || twoRoomsForGuests || threeRoomsForGuests || hundredRoomsNotForGuests;
+  if (isMatched) {
     return true;
   }
   return false;

@@ -15,13 +15,13 @@ export function setInactiveState() {
       mapItem.disabled = true;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      setStatusToChildNode(mapItem, 'LABEL', 'add', 'map__feature_inactive');
+      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'add', className: 'map__feature_inactive'});
     }
   });
   mapElement.disabled = true;
 }
 
-function setStatusToChildNode(parentItem, tagName, status, className) {
+function setStatusToChildNode({parentItem, tagName, status, className}) {
   [...parentItem.childNodes].forEach((item) => {
     if (item.tagName === tagName) {
       return status === 'remove' ? item.classList.remove(className) : item.classList.add(className);
@@ -52,11 +52,6 @@ buttonSubmitElement.addEventListener('click', submitFormHandler);
 
 function submitFormHandler(evt) {
   evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid){
-    //'valid'
-  } else {
-    //'invalid'
-  }
+  pristine.validate();
 }
 
