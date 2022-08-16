@@ -1,5 +1,12 @@
-import {RENAME_TYPES} from './constants.js';
 import {generatedAdvertisementData} from './generating-data.js';
+
+const renameTypes = {
+  'flat': 'Квартира',
+  'bungalow': 'Бунгало',
+  'house': 'Дом',
+  'palace':'Дворец',
+  'hotel': 'Отель'
+};
 
 function getNameByRoomCount(value){
   if (value === 1){
@@ -38,7 +45,7 @@ export function generateSimilarAdvertisement() {
     advertisementItemContent.querySelector('.popup__title').textContent = advertisement.offer.title || '';
     advertisementItemContent.querySelector('.popup__text--address').textContent = advertisement.offer.address || '';
     advertisementItemContent.querySelector('.popup__text--price').textContent = `${advertisement.offer.price} ₽/ночь` || '';
-    advertisementItemContent.querySelector('.popup__type').textContent = RENAME_TYPES[advertisement.offer.type] || '';
+    advertisementItemContent.querySelector('.popup__type').textContent = renameTypes[advertisement.offer.type] || '';
     advertisementItemContent.querySelector('.popup__text--capacity').textContent =`${advertisement.offer.rooms} ${getNameByRoomCount(advertisement.offer.rooms)} для ${advertisement.offer.guests} ${getNameByGuestCount(advertisement.offer.guests)}` || '';
     advertisementItemContent.querySelector('.popup__text--time').textContent = `Заезд после ${advertisement.offer.checkin}, выезд до ${advertisement.offer.checkout}` || '';
     advertisementItemContent.querySelector('.popup__features').textContent = advertisement.offer.features || '';

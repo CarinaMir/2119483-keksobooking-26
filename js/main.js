@@ -1,5 +1,8 @@
-import {generateSimilarAdvertisement} from './generating-similars.js';
-import {setActiveState, setInactiveState} from './form.js';
-generateSimilarAdvertisement();
-setInactiveState();
-setActiveState();
+//import { generateSimilarAdvertisement } from './generating-similars.js';
+import './form.js';
+
+
+//generateSimilarAdvertisement();
+//setInactiveState();
+//setActiveState();
+

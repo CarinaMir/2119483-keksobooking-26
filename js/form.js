@@ -1,3 +1,5 @@
+import { pristine } from './validating.js';
+
 const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormNodes = [...advertisementFormElement.childNodes];
 const mapElement = document.querySelector('.map__filters');
@@ -13,15 +15,22 @@ export function setInactiveState() {
       mapItem.disabled = true;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      [...mapItem.childNodes].forEach((item) => {
-        if (item.tagName === 'LABEL') {
-          item.classList.add('map__feature_inactive');
-        }
-      });
+      setStatusToChildNode(mapItem, 'LABEL', 'add', 'map__feature_inactive');
     }
   });
   mapElement.disabled = true;
 }
+
+function setStatusToChildNode(parentItem, tagName, status, className) {
+  [...parentItem.childNodes].forEach((item) => {
+    if (item.tagName === tagName) {
+      return status === 'remove' ? item.classList.remove(className) : item.classList.add(className);
+    }
+  });
+}
+
+const formElement = document.querySelector('.ad-form');
+const buttonSubmitElement = formElement.querySelector('.ad-form__submit');
 
 export function setActiveState() {
   advertisementFormElement.classList.remove('ad-form--disabled');
@@ -33,13 +42,21 @@ export function setActiveState() {
       mapItem.disabled = false;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      [...mapItem.childNodes].forEach((item) => {
-        if (item.tagName === 'LABEL') {
-          item.classList.remove('map__feature_inactive');
-        }
-      });
+      setStatusToChildNode(mapItem, 'LABEL', 'remove', 'map__feature_inactive');
     }
   });
   mapElement.disabled = false;
+}
+
+buttonSubmitElement.addEventListener('click', submitFormHandler);
+
+function submitFormHandler(evt) {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid){
+    //'valid'
+  } else {
+    //'invalid'
+  }
 }
 
