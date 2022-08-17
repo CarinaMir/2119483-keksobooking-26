@@ -42,7 +42,7 @@ export function setActiveState() {
       mapItem.disabled = false;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      setStatusToChildNode(mapItem, 'LABEL', 'remove', 'map__feature_inactive');
+      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'remove', className: 'map__feature_active'});
     }
   });
   mapElement.disabled = false;

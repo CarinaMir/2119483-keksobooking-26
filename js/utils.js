@@ -23,4 +23,3 @@ export function validateTitleLenght(value) {
 export function validatePrice(value) {
   return !!value && value <= 100000;
 }
-
