@@ -1,7 +1,7 @@
 import { generateSimilarAdvertisement } from './generating-similars.js';
 import { setActiveState } from './form.js';
 import { CENTER_LAT, CENTER_LNG } from './constants.js';
-import { generatedAdvertisementData } from './generating-data.js';
+import { getData } from './api.js';
 
 const mapElement = document.querySelector('#map-canvas');
 const coordinateElement = document.querySelector('#address');
@@ -13,7 +13,8 @@ mainMarker.on('moveend', (evt) => {
   const coordinate = evt.target.getLatLng();
   coordinateElement.value = `${(coordinate.lat).toFixed(5)}; ${coordinate.lng.toFixed(5)}`;
 });
-addOrdinaryMarkersToMap();
+
+getData().then((data) => addOrdinaryMarkersToMap(data));
 
 function setMainMarkerSettings() {
   const markerIcon = L.icon({
@@ -50,8 +51,8 @@ function initMap() {
   return card;
 }
 
-function addOrdinaryMarkersToMap() {
-  const advertisementItems = generatedAdvertisementData();
+function addOrdinaryMarkersToMap(data) {
+  const advertisementItems = data;
   const ordinaryIcon = L.icon({
     iconUrl: './img/pin.svg',
     iconSize: [40, 40],
