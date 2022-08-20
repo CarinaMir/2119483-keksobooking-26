@@ -1,4 +1,4 @@
-export function getRandomPositiveFloat(firstValue, secondValue, digits = 1){
+export function getRandomPositiveFloat(firstValue, secondValue, digits = 1) {
   const lower = Math.min(Math.abs(firstValue), Math.abs(secondValue));
   const upper = Math.max(Math.abs(firstValue), Math.abs(secondValue));
   const result = Math.random() * (upper-lower) + lower;
@@ -12,7 +12,7 @@ export function getRandomPositiveInteger (firstValue, secondValue) {
   return Math.floor(result);
 }
 
-export function getValueToString(value){
+export function getValueToString(value) {
   return value < 10 ? `0${ value}` : value;
 }
 

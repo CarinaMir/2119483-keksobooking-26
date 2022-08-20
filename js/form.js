@@ -4,6 +4,23 @@ const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormNodes = [...advertisementFormElement.childNodes];
 const mapElement = document.querySelector('.map__filters');
 const mapNodes = [...mapElement.childNodes];
+const formElement = document.querySelector('.ad-form');
+const buttonSubmitElement = formElement.querySelector('.ad-form__submit');
+
+buttonSubmitElement.addEventListener('click', submitFormHandler);
+
+function submitFormHandler(evt) {
+  evt.preventDefault();
+  pristine.validate();
+}
+
+function setStatusToChildNode({parentItem, tagName, status, className}) {
+  [...parentItem.childNodes].forEach((item) => {
+    if (item.tagName === tagName) {
+      return status === 'remove' ? item.classList.remove(className) : item.classList.add(className);
+    }
+  });
+}
 
 export function setInactiveState() {
   advertisementFormElement.classList.add('ad-form--disabled');
@@ -21,17 +38,6 @@ export function setInactiveState() {
   mapElement.disabled = true;
 }
 
-function setStatusToChildNode({parentItem, tagName, status, className}) {
-  [...parentItem.childNodes].forEach((item) => {
-    if (item.tagName === tagName) {
-      return status === 'remove' ? item.classList.remove(className) : item.classList.add(className);
-    }
-  });
-}
-
-const formElement = document.querySelector('.ad-form');
-const buttonSubmitElement = formElement.querySelector('.ad-form__submit');
-
 export function setActiveState() {
   advertisementFormElement.classList.remove('ad-form--disabled');
   advertisementFormNodes.forEach((item) => {
@@ -48,10 +54,4 @@ export function setActiveState() {
   mapElement.disabled = false;
 }
 
-buttonSubmitElement.addEventListener('click', submitFormHandler);
-
-function submitFormHandler(evt) {
-  evt.preventDefault();
-  pristine.validate();
-}
 
