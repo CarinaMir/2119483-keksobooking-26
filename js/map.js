@@ -14,7 +14,7 @@ mainMarker.on('moveend', (evt) => {
   coordinateElement.value = `${(coordinate.lat).toFixed(5)}; ${coordinate.lng.toFixed(5)}`;
 });
 
-getData().then((data) => addOrdinaryMarkersToMap(data));
+getData().then((data) => !!data && addOrdinaryMarkersToMap(data));
 
 function setMainMarkerSettings() {
   const markerIcon = L.icon({
@@ -71,5 +71,12 @@ function addOrdinaryMarkersToMap(data) {
     ordinaryMarker
       .addTo(map)
       .bindPopup(generateSimilarAdvertisement(advertisement));
+  });
+}
+
+export function setMarker() {
+  mainMarker.setLatLng({
+    lat: CENTER_LAT,
+    lng: CENTER_LNG,
   });
 }
