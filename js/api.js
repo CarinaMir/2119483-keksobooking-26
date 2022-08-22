@@ -27,15 +27,17 @@ async function sendData(form) {
     buttonSubmitElement.disabled = true;
     buttonSubmitElement.classList.add('ad-form__submit__disabled');
     if (response.ok) {
-      buttonSubmitElement.disabled = false;
-      buttonSubmitElement.classList.remove('ad-form__submit__disabled');
-      return await response;
+      return true;
     } else {
-    //console.log('Не удалось отправить форму_1');
+      return false;
     }
   }
   catch (err) {
-    //console.log('Не удалось отправить форму_2');
+    return false;
+  }
+  finally {
+    buttonSubmitElement.disabled = false;
+    buttonSubmitElement.classList.remove('ad-form__submit__disabled');
   }
 }
 

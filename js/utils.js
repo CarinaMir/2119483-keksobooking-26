@@ -36,4 +36,3 @@ export function showAlert(message) {
     alertContainerElement.remove();
   }, ALERT_SHOW_TIME);
 }
-

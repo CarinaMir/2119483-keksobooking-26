@@ -4,9 +4,9 @@ import { setMarker } from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
 
 const advertisementFormElement = document.querySelector('.ad-form');
-const advertisementFormNodes = [...advertisementFormElement.childNodes];
+const advertisementFormElements = [...advertisementFormElement.childNodes];
 const mapElement = document.querySelector('.map__filters');
-const mapNodes = [...mapElement.childNodes];
+const mapElements = [...mapElement.childNodes];
 const submitButtonElement = advertisementFormElement.querySelector('.ad-form__submit');
 const resetButtonElement = advertisementFormElement.querySelector('.ad-form__reset');
 const coordinateElement = document.querySelector('#address');
@@ -18,45 +18,93 @@ const capacityElement = advertisementFormElement.querySelector('#capacity');
 const timeinElement = advertisementFormElement.querySelector('#timein');
 const timeoutElement = advertisementFormElement.querySelector('#timeout');
 const descriptionElement = advertisementFormElement.querySelector('#description');
+const advertismentSliderElement = advertisementFormElement.querySelector('.ad-form__slider');
+const successMessageTemplateElement = document.querySelector('#success');
+const successMessageElement = successMessageTemplateElement.content.querySelector('div');
+const errorMessageTemplateElement = document.querySelector('#error');
+const errorMessageElement = errorMessageTemplateElement.content.querySelector('div');
 
 submitButtonElement.addEventListener('click', submitFormHandler);
 resetButtonElement.addEventListener('click', resetButtonHandler);
+document.body.addEventListener('click', closeModalPopupHandler);
 
 function submitFormHandler(evt) {
   evt.preventDefault();
   const formData = new FormData(advertisementFormElement);
   const isValid = pristine.validate();
-  if (isValid){
-    sendData(formData);
+  if (isValid) {
+    sendData(formData).then((result) => {
+      if (result){
+        showSuccessMessage();
+        resetFormSettings();
+      } else {
+        showErrorMessage();
+      }
+    });
+  }
+}
+
+function closeModalPopupHandler(evt) {
+  const successContainerElement = document.querySelector('.success');
+  const errorContainerElement = document.querySelector('.error');
+  if (successContainerElement && successContainerElement.contains(evt.target)){
+    document.body.removeChild(successContainerElement);
+  }
+  if (errorContainerElement && errorContainerElement.contains(evt.target)){
+    document.body.removeChild(errorContainerElement);
   }
 }
 
 function resetButtonHandler(evt){
   evt.preventDefault();
-  setMarker();
-  closePopup();
-  coordinateElement.value = `${CENTER_LAT}; ${CENTER_LNG}`;
-  titleElement.value = '';
-  roomNumberElement.selectedIndex = 0;
-  typeElement.selectedIndex = 0;
-  capacityElement.selectedIndex = 2;
-  priceElement.value = 0;
-  timeinElement.selectedIndex = 0;
-  timeoutElement.selectedIndex = 0;
-  descriptionElement.value = '';
-  deletePristineErrorMessage();
+  resetFormSettings();
 }
 
-function closePopup() {
+function resetFormSettings() {
+  setMarker();
+  closeMapPopup();
+  resetFormFilters();
+  clearPristineErrorMessage();
+}
+
+function closeMapPopup() {
   const popupPaneElement = document.querySelector('.leaflet-pane .leaflet-popup-pane').querySelector('.leaflet-zoom-animated');
   if (popupPaneElement){
     popupPaneElement.remove();
   }
 }
 
-function deletePristineErrorMessage() {
+function resetFormFilters() {
+  coordinateElement.value = `${CENTER_LAT}; ${CENTER_LNG}`;
+  titleElement.value = '';
+  roomNumberElement.selectedIndex = 0;
+  typeElement.selectedIndex = 0;
+  capacityElement.selectedIndex = 2;
+  timeinElement.selectedIndex = 0;
+  timeoutElement.selectedIndex = 0;
+  descriptionElement.value = '';
+  advertismentSliderElement.noUiSlider.set(0);
+  priceElement.value = 0;
+}
+
+function clearPristineErrorMessage() {
   const pristineErrorMessages = [...document.querySelectorAll('.pristine-error')];
-  pristineErrorMessages.forEach((errorMessage) => errorMessage.remove());
+  pristineErrorMessages.forEach((errorMessage) => {
+    if (errorMessage.textContent.length > 0){
+      errorMessage.textContent = '';
+    }
+  }
+  );
+}
+
+function showErrorMessage(){
+  errorMessageElement.setAttribute('style', 'z-index: 100');
+  document.body.appendChild(errorMessageElement);
+}
+
+function showSuccessMessage() {
+  successMessageElement.setAttribute('style', 'z-index: 100');
+  document.body.appendChild(successMessageElement);
 }
 
 function setStatusToChildNode({parentItem, tagName, status, className}) {
@@ -69,10 +117,10 @@ function setStatusToChildNode({parentItem, tagName, status, className}) {
 
 export function setInactiveState() {
   advertisementFormElement.classList.add('ad-form--disabled');
-  advertisementFormNodes.forEach((item) => {
+  advertisementFormElements.forEach((item) => {
     item.disabled = true;
   });
-  mapNodes.forEach((mapItem) => {
+  mapElements.forEach((mapItem) => {
     if (mapItem.tagName === 'SELECT') {
       mapItem.disabled = true;
     }
@@ -85,10 +133,10 @@ export function setInactiveState() {
 
 export function setActiveState() {
   advertisementFormElement.classList.remove('ad-form--disabled');
-  advertisementFormNodes.forEach((item) => {
+  advertisementFormElements.forEach((item) => {
     item.disabled = false;
   });
-  mapNodes.forEach((mapItem) => {
+  mapElements.forEach((mapItem) => {
     if (mapItem.tagName === 'SELECT') {
       mapItem.disabled = false;
     }
