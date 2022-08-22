@@ -36,3 +36,7 @@ export function showAlert(message) {
     alertContainerElement.remove();
   }, ALERT_SHOW_TIME);
 }
+
+export function isEscapeKey(evt) {
+  return evt.key === 'Escape';
+}

@@ -2,6 +2,7 @@ import { pristine } from './validating.js';
 import { sendData } from './api.js';
 import { setMarker } from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
+import { isEscapeKey } from './utils.js';
 
 const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormElements = [...advertisementFormElement.childNodes];
@@ -26,7 +27,8 @@ const errorMessageElement = errorMessageTemplateElement.content.querySelector('d
 
 submitButtonElement.addEventListener('click', submitFormHandler);
 resetButtonElement.addEventListener('click', resetButtonHandler);
-document.body.addEventListener('click', closeModalPopupHandler);
+document.addEventListener('click', closeModalPopupHandler);
+document.addEventListener('keydown', keydownHandler);
 
 function submitFormHandler(evt) {
   evt.preventDefault();
@@ -44,6 +46,11 @@ function submitFormHandler(evt) {
   }
 }
 
+function resetButtonHandler(evt){
+  evt.preventDefault();
+  resetFormSettings();
+}
+
 function closeModalPopupHandler(evt) {
   const successContainerElement = document.querySelector('.success');
   const errorContainerElement = document.querySelector('.error');
@@ -55,9 +62,18 @@ function closeModalPopupHandler(evt) {
   }
 }
 
-function resetButtonHandler(evt){
-  evt.preventDefault();
-  resetFormSettings();
+function keydownHandler(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    const successContainerElement = document.querySelector('.success');
+    const errorContainerElement = document.querySelector('.error');
+    if (successContainerElement && evt.target.contains(successContainerElement)){
+      document.body.removeChild(successContainerElement);
+    }
+    if (errorContainerElement && evt.target.contains(errorContainerElement)){
+      document.body.removeChild(errorContainerElement);
+    }
+  }
 }
 
 function resetFormSettings() {
