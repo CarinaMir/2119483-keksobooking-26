@@ -1057,3 +1057,38 @@ fieldset {
   color: red;
   font-size: 12px;
 }
+
+.alert-message--active {
+  position: absolute;
+  z-index: 100; 
+  left: 0px; 
+  top: 0px; 
+  right: 0px; 
+  background-color: red;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ad-form__submit__disabled {
+  background-color: #c0c0c0;
+  border: 4px solid #c0c0c0;
+}
+
+.ad-form__submit__disabled:hover,
+.ad-form__submit__disabled:focus {
+  border-color: #c0c0c0;
+}
+
+.ad-form__submit__disabled:focus {
+  outline: none;
+}
+
+.ad-form__submit__disabled:active {
+  outline: none;
+  color: #c0c0c0;
+  border-color: #c0c0c0;
+  background-color: #c0c0c0;
+}

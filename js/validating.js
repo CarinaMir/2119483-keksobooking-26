@@ -9,7 +9,6 @@ const advertismentSliderElement = formElement.querySelector('.ad-form__slider');
 const advertismentTypeElement = formElement.querySelector('#type');
 const advertismentTimeinElement = formElement.querySelector('#timein');
 const advertismentTimeoutElement = formElement.querySelector('#timeout');
-
 const defaultConfig = {
   classTo: 'ad-form__element',
   errorClass: 'has-danger',
@@ -18,36 +17,73 @@ const defaultConfig = {
   errorTextTag: 'div',
   errorTextClass: 'text-help'
 };
+const pristine = new Pristine(formElement, defaultConfig);
 
-noUiSlider.create(advertismentSliderElement, {
-  range: {
-    min: 0,
-    max: 100000,
-  },
-  start: 0,
-  step: 1000,
-  connect: 'lower',
-  format: {
-    to: function (value) {
-      return value.toFixed(0);
-    },
-    from: function (value) {
-      return parseFloat(value);
-    },
-  },
-});
+function selectFieldChangedHandler() {
+  pristine.validate([advertismentRoomElement, advertismentGuestElement]);
+}
+advertismentRoomElement.addEventListener('change', selectFieldChangedHandler);
+advertismentGuestElement.addEventListener('change', selectFieldChangedHandler);
+validFieldsByPristine();
 
+noUiSlider.create(advertismentSliderElement, setsliderSettings());
 advertismentSliderElement.noUiSlider.on('update', () => {
   advertismentPriceElement.value = advertismentSliderElement.noUiSlider.get();
 });
-
 advertismentPriceElement.addEventListener('change', changePriceHandler);
+advertismentTypeElement.addEventListener('change', changeTypeHandler);
+advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
+advertismentTimeoutElement.addEventListener('change', setAppropriateTimeoutValueHander);
+
+function validFieldsByPristine(){
+  pristine.addValidator(
+    advertismentRoomElement,
+    validateGuestsByRoom,
+    getMessageByValidatingGuestByRoom
+  );
+
+  pristine.addValidator(
+    advertismentGuestElement,
+    validateGuestsByRoom,
+    getMessageByValidatingGuestByRoom
+  );
+
+  pristine.addValidator(
+    advertismentTitleElement,
+    validateTitleLenght,
+    'Длина не меньше 30 и не больше 100 символов'
+  );
+
+  pristine.addValidator(
+    advertismentPriceElement,
+    validatePrice,
+    'Максимальное значение — 100000'
+  );
+}
+
+function setsliderSettings() {
+  return {
+    range: {
+      min: 0,
+      max: 100000,
+    },
+    start: 0,
+    step: 1000,
+    connect: 'lower',
+    format: {
+      to: function (value) {
+        return value.toFixed(0);
+      },
+      from: function (value) {
+        return parseFloat(value);
+      },
+    },
+  };
+}
 
 function changePriceHandler() {
   advertismentSliderElement.noUiSlider.set(advertismentPriceElement.value);
 }
-
-advertismentTypeElement.addEventListener('change', changeTypeHandler);
 
 function changeTypeHandler(evt) {
   const value = getSliderOptions(evt.target.value);
@@ -106,14 +142,10 @@ function getSliderOptions(value) {
   }
 }
 
-advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
-
 function setAppropriateTimeinValueHander() {
   const timein = advertismentTimeinElement.value;
   advertismentTimeoutElement.value = timein;
 }
-
-advertismentTimeoutElement.addEventListener('change', setAppropriateTimeoutValueHander);
 
 function setAppropriateTimeoutValueHander() {
   const timeout = advertismentTimeoutElement.value;
@@ -150,35 +182,4 @@ function validateGuestsByRoom() {
   return false;
 }
 
-export const pristine = new Pristine(formElement, defaultConfig);
-
-function selectFieldChangedHandler() {
-  pristine.validate([advertismentRoomElement, advertismentGuestElement]);
-}
-
-advertismentRoomElement.addEventListener('change', selectFieldChangedHandler);
-advertismentGuestElement.addEventListener('change', selectFieldChangedHandler);
-
-pristine.addValidator(
-  advertismentRoomElement,
-  validateGuestsByRoom,
-  getMessageByValidatingGuestByRoom
-);
-
-pristine.addValidator(
-  advertismentGuestElement,
-  validateGuestsByRoom,
-  getMessageByValidatingGuestByRoom
-);
-
-pristine.addValidator(
-  advertismentTitleElement,
-  validateTitleLenght,
-  'Длина не меньше 30 и не больше 100 символов'
-);
-
-pristine.addValidator(
-  advertismentPriceElement,
-  validatePrice,
-  'Максимальное значение — 100000'
-);
+export { pristine };
