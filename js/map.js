@@ -1,5 +1,5 @@
 import { generateSimilarAdvertisement } from './generating-similars.js';
-import { setActiveState } from './form.js';
+import { setActiveState} from './form.js';
 import { CENTER_LAT, CENTER_LNG } from './constants.js';
 import { getData } from './api.js';
 
@@ -7,7 +7,6 @@ const mapElement = document.querySelector('#map-canvas');
 const coordinateElement = document.querySelector('#address');
 const mainMarker = setMainMarkerSettings();
 const map = initMap();
-
 mainMarker.addTo(map);
 mainMarker.on('moveend', (evt) => {
   const coordinate = evt.target.getLatLng();

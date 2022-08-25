@@ -1,13 +1,12 @@
 import { URL } from './constants.js';
 import { showAlert } from './utils.js';
 
-const buttonSubmitElement = document.querySelector('.ad-form__submit');
-
 async function getData() {
   try {
     const response = await fetch(`${URL}/data`);
     if (response.ok) {
-      return await response.json();
+      const data = await response.json();
+      return data;
     } else {
       throw new Error(`${response.status} - ${response.statusText}`);
     }
@@ -24,20 +23,14 @@ async function sendData(form) {
   };
   try {
     const response = await fetch(URL, config);
-    buttonSubmitElement.disabled = true;
-    buttonSubmitElement.classList.add('ad-form__submit__disabled');
     if (response.ok) {
       return true;
     } else {
-      return false;
+      throw new Error(`${response.status} - ${response.statusText}`);
     }
   }
   catch (err) {
-    return false;
-  }
-  finally {
-    buttonSubmitElement.disabled = false;
-    buttonSubmitElement.classList.remove('ad-form__submit__disabled');
+    showAlert(err);
   }
 }
 

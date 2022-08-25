@@ -24,6 +24,7 @@ const successMessageTemplateElement = document.querySelector('#success');
 const successMessageElement = successMessageTemplateElement.content.querySelector('div');
 const errorMessageTemplateElement = document.querySelector('#error');
 const errorMessageElement = errorMessageTemplateElement.content.querySelector('div');
+const buttonSubmitElement = document.querySelector('.ad-form__submit');
 
 submitButtonElement.addEventListener('click', submitFormHandler);
 resetButtonElement.addEventListener('click', resetButtonHandler);
@@ -36,6 +37,7 @@ function submitFormHandler(evt) {
   const isValid = pristine.validate();
   if (isValid) {
     sendData(formData).then((result) => {
+      disableSubmitdButton();
       if (result){
         showSuccessMessage();
         resetFormSettings();
@@ -43,6 +45,7 @@ function submitFormHandler(evt) {
         showErrorMessage();
       }
     });
+    abledSubmitButton();
   }
 }
 
@@ -123,28 +126,22 @@ function showSuccessMessage() {
   document.body.appendChild(successMessageElement);
 }
 
+function disableSubmitdButton(){
+  buttonSubmitElement.disabled = false;
+  buttonSubmitElement.classList.remove('ad-form__submit__disabled');
+}
+
+function abledSubmitButton(){
+  buttonSubmitElement.disabled = true;
+  buttonSubmitElement.classList.add('ad-form__submit__disabled');
+}
+
 function setStatusToChildNode({parentItem, tagName, status, className}) {
   [...parentItem.childNodes].forEach((item) => {
     if (item.tagName === tagName) {
       return status === 'remove' ? item.classList.remove(className) : item.classList.add(className);
     }
   });
-}
-
-export function setInactiveState() {
-  advertisementFormElement.classList.add('ad-form--disabled');
-  advertisementFormElements.forEach((item) => {
-    item.disabled = true;
-  });
-  mapElements.forEach((mapItem) => {
-    if (mapItem.tagName === 'SELECT') {
-      mapItem.disabled = true;
-    }
-    if (mapItem.tagName === 'FIELDSET') {
-      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'add', className: 'map__feature_inactive'});
-    }
-  });
-  mapElement.disabled = true;
 }
 
 export function setActiveState() {
@@ -157,7 +154,7 @@ export function setActiveState() {
       mapItem.disabled = false;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'remove', className: 'map__feature_active'});
+      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'remove', className: 'map__feature_inactive'});
     }
   });
   mapElement.disabled = false;
