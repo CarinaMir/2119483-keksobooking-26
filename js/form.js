@@ -24,7 +24,6 @@ const successMessageTemplateElement = document.querySelector('#success');
 const successMessageElement = successMessageTemplateElement.content.querySelector('div');
 const errorMessageTemplateElement = document.querySelector('#error');
 const errorMessageElement = errorMessageTemplateElement.content.querySelector('div');
-const buttonSubmitElement = document.querySelector('.ad-form__submit');
 
 submitButtonElement.addEventListener('click', submitFormHandler);
 resetButtonElement.addEventListener('click', resetButtonHandler);
@@ -127,13 +126,13 @@ function showSuccessMessage() {
 }
 
 function disableSubmitdButton(){
-  buttonSubmitElement.disabled = false;
-  buttonSubmitElement.classList.remove('ad-form__submit__disabled');
+  submitButtonElement.disabled = false;
+  submitButtonElement.classList.remove('ad-form__submit__disabled');
 }
 
 function abledSubmitButton(){
-  buttonSubmitElement.disabled = true;
-  buttonSubmitElement.classList.add('ad-form__submit__disabled');
+  submitButtonElement.disabled = true;
+  submitButtonElement.classList.add('ad-form__submit__disabled');
 }
 
 function setStatusToChildNode({parentItem, tagName, status, className}) {
@@ -144,11 +143,14 @@ function setStatusToChildNode({parentItem, tagName, status, className}) {
   });
 }
 
-export function setActiveState() {
+export function setActiveAdvertisementForm() {
   advertisementFormElement.classList.remove('ad-form--disabled');
   advertisementFormElements.forEach((item) => {
     item.disabled = false;
   });
+}
+
+export function setActiveMapFilters() {
   mapElements.forEach((mapItem) => {
     if (mapItem.tagName === 'SELECT') {
       mapItem.disabled = false;

@@ -1,5 +1,5 @@
 import { generateSimilarAdvertisement } from './generating-similars.js';
-import { setActiveState} from './form.js';
+import { setActiveAdvertisementForm, setActiveMapFilters } from './form.js';
 import { CENTER_LAT, CENTER_LNG } from './constants.js';
 import { getData } from './api.js';
 
@@ -13,7 +13,12 @@ mainMarker.on('moveend', (evt) => {
   coordinateElement.value = `${(coordinate.lat).toFixed(5)}; ${coordinate.lng.toFixed(5)}`;
 });
 
-getData().then((data) => !!data && addOrdinaryMarkersToMap(data));
+getData().then((data) => {
+  if (data){
+    addOrdinaryMarkersToMap(data);
+    setActiveMapFilters();
+  }
+});
 
 function setMainMarkerSettings() {
   const markerIcon = L.icon({
@@ -35,7 +40,7 @@ function setMainMarkerSettings() {
 function initMap() {
   const card = L.map(mapElement)
     .on('load', () => {
-      setActiveState();
+      setActiveAdvertisementForm();
       coordinateElement.value = `${CENTER_LAT}; ${CENTER_LNG}`;
     })
     .setView({
