@@ -1,6 +1,6 @@
 import { pristine } from './validating.js';
 import { sendData } from './api.js';
-import { setMarker } from './map.js';
+import { setMarker, initMapState } from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
 import { isEscapeKey } from './utils.js';
 
@@ -83,6 +83,8 @@ function resetFormSettings() {
   closeMapPopup();
   resetFormFilters();
   clearPristineErrorMessage();
+  resetMapFilters();
+  initMapState();
 }
 
 function closeMapPopup() {
@@ -93,6 +95,7 @@ function closeMapPopup() {
 }
 
 function resetFormFilters() {
+  const formFeaturesFiltersContainerElement = document.querySelector ('.ad-form__element--wide.features');
   coordinateElement.value = `${CENTER_LAT}; ${CENTER_LNG}`;
   titleElement.value = '';
   roomNumberElement.selectedIndex = 0;
@@ -103,6 +106,28 @@ function resetFormFilters() {
   descriptionElement.value = '';
   advertismentSliderElement.noUiSlider.set(0);
   priceElement.value = 0;
+  setUnchecked(formFeaturesFiltersContainerElement);
+}
+
+function resetMapFilters() {
+  const housingTypeElement = document.querySelector('#housing-type');
+  const housingPriceElement = document.querySelector('#housing-price');
+  const housingRoomsElement = document.querySelector('#housing-rooms');
+  const housingGuestsElement = document.querySelector('#housing-guests');
+  const housingFeaturesContainerElement = document.querySelector('#housing-features');
+  housingTypeElement.selectedIndex = 0;
+  housingPriceElement.selectedIndex = 0;
+  housingRoomsElement.selectedIndex = 0;
+  housingGuestsElement.selectedIndex = 0;
+  setUnchecked(housingFeaturesContainerElement);
+}
+
+function setUnchecked(items) {
+  [...items.childNodes].forEach((item) => {
+    if (item.nodeName === 'INPUT') {
+      item.checked = false;
+    }
+  });
 }
 
 function clearPristineErrorMessage() {
