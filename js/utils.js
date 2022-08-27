@@ -40,3 +40,11 @@ export function showAlert(message) {
 export function isEscapeKey(evt) {
   return evt.key === 'Escape';
 }
+
+export function debounce(callback, timeoutDelay) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}

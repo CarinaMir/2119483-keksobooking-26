@@ -1,7 +1,8 @@
 import { generateSimilarAdvertisement } from './generating-similars.js';
 import { setActiveAdvertisementForm, setActiveMapFilters } from './form.js';
-import { CENTER_LAT, CENTER_LNG } from './constants.js';
+import { CENTER_LAT, CENTER_LNG, RENDER_DELAY } from './constants.js';
 import { getData } from './api.js';
+import { debounce } from './utils.js';
 
 const mapElement = document.querySelector('#map-canvas');
 const coordinateElement = document.querySelector('#address');
@@ -29,11 +30,11 @@ mainMarker.on('moveend', (evt) => {
 });
 renderMapElemens();
 
-housingTypeElement.addEventListener('change', changeFilterHandler);
-housingPriceElement.addEventListener('change', changeFilterHandler);
-housingRoomsElement.addEventListener('change', changeFilterHandler);
-housingGuestsElement.addEventListener('change', changeFilterHandler);
-housingFeaturesContainerElement.addEventListener('change', changeFilterHandler);
+housingTypeElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+housingPriceElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+housingRoomsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+housingGuestsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+housingFeaturesContainerElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
 
 function renderMapElemens() {
   getData().then((data) => {

@@ -21,4 +21,4 @@ export const CENTER_LAT = 35.68950;
 export const CENTER_LNG = 139.69200;
 export const URL = 'https://26.javascript.pages.academy/keksobooking';
 export const ALERT_SHOW_TIME = 5000;
-
+export const RENDER_DELAY = 5000;
