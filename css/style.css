@@ -1092,3 +1092,9 @@ fieldset {
   border-color: #c0c0c0;
   background-color: #c0c0c0;
 }
+
+.ad-form__preview_img {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+}

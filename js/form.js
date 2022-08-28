@@ -3,6 +3,7 @@ import { sendData } from './api.js';
 import { setMarker, initMapState, setMapView, closeMapPopup} from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
 import { isEscapeKey } from './utils.js';
+import { setImagesToForm, clearPreviewImg }  from './adding-photo.js';
 
 const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormElements = [...advertisementFormElement.childNodes];
@@ -29,6 +30,7 @@ submitButtonElement.addEventListener('click', submitFormHandler);
 resetButtonElement.addEventListener('click', resetButtonHandler);
 document.addEventListener('click', closeModalPopupHandler);
 document.addEventListener('keydown', keydownHandler);
+setImagesToForm();
 
 function submitFormHandler(evt) {
   evt.preventDefault();
@@ -86,6 +88,7 @@ function resetFormSettings() {
   resetMapFilters();
   initMapState();
   setMapView();
+  clearPreviewImg();
 }
 
 function resetFormFilters() {

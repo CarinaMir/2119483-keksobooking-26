@@ -1,4 +1,4 @@
-import { ALERT_SHOW_TIME } from './constants.js';
+import { ALERT_SHOW_TIME, FILE_TYPES } from './constants.js';
 
 export function getRandomPositiveFloat(firstValue, secondValue, digits = 1) {
   const lower = Math.min(Math.abs(firstValue), Math.abs(secondValue));
@@ -47,4 +47,13 @@ export function debounce(callback, timeoutDelay) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
+}
+
+export function setPhoto(chooserName, fieldName) {
+  const file = chooserName.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((item) => fileName.endsWith(item));
+  if (matches) {
+    fieldName.src = URL.createObjectURL(file);
+  }
 }
