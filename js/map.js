@@ -45,7 +45,7 @@ function renderMapElemens() {
   });
 }
 
-function getFilteredData(items){
+function getFilteredData(items) {
   return items.slice(0, 10);
 }
 
@@ -180,4 +180,16 @@ export function setMarker() {
     lat: CENTER_LAT,
     lng: CENTER_LNG,
   });
+}
+
+export function setMapView() {
+  map.setView({
+    lng: CENTER_LNG,
+    lat: CENTER_LAT,
+  },
+  10);
+}
+
+export function closeMapPopup() {
+  map.closePopup();
 }

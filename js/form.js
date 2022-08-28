@@ -1,6 +1,6 @@
 import { pristine } from './validating.js';
 import { sendData } from './api.js';
-import { setMarker, initMapState } from './map.js';
+import { setMarker, initMapState, setMapView, closeMapPopup} from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
 import { isEscapeKey } from './utils.js';
 
@@ -48,7 +48,7 @@ function submitFormHandler(evt) {
   }
 }
 
-function resetButtonHandler(evt){
+function resetButtonHandler(evt) {
   evt.preventDefault();
   resetFormSettings();
 }
@@ -85,13 +85,7 @@ function resetFormSettings() {
   clearPristineErrorMessage();
   resetMapFilters();
   initMapState();
-}
-
-function closeMapPopup() {
-  const popupPaneElement = document.querySelector('.leaflet-pane .leaflet-popup-pane').querySelector('.leaflet-zoom-animated');
-  if (popupPaneElement){
-    popupPaneElement.remove();
-  }
+  setMapView();
 }
 
 function resetFormFilters() {
@@ -140,7 +134,7 @@ function clearPristineErrorMessage() {
   );
 }
 
-function showErrorMessage(){
+function showErrorMessage() {
   errorMessageElement.setAttribute('style', 'z-index: 100');
   document.body.appendChild(errorMessageElement);
 }
@@ -150,12 +144,12 @@ function showSuccessMessage() {
   document.body.appendChild(successMessageElement);
 }
 
-function disableSubmitdButton(){
+function disableSubmitdButton() {
   submitButtonElement.disabled = false;
   submitButtonElement.classList.remove('ad-form__submit__disabled');
 }
 
-function abledSubmitButton(){
+function abledSubmitButton() {
   submitButtonElement.disabled = true;
   submitButtonElement.classList.add('ad-form__submit__disabled');
 }
@@ -186,5 +180,3 @@ export function setActiveMapFilters() {
   });
   mapElement.disabled = false;
 }
-
-
