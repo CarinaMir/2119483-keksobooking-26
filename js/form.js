@@ -1,8 +1,9 @@
 import { pristine } from './validating.js';
 import { sendData } from './api.js';
-import { setMarker } from './map.js';
+import { setMarker, initMapState, setMapView, closeMapPopup} from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
 import { isEscapeKey } from './utils.js';
+import { setImagesToForm, clearPreviewImg }  from './adding-photo.js';
 
 const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormElements = [...advertisementFormElement.childNodes];
@@ -29,6 +30,7 @@ submitButtonElement.addEventListener('click', submitFormHandler);
 resetButtonElement.addEventListener('click', resetButtonHandler);
 document.addEventListener('click', closeModalPopupHandler);
 document.addEventListener('keydown', keydownHandler);
+setImagesToForm();
 
 function submitFormHandler(evt) {
   evt.preventDefault();
@@ -36,6 +38,7 @@ function submitFormHandler(evt) {
   const isValid = pristine.validate();
   if (isValid) {
     sendData(formData).then((result) => {
+      disableSubmitdButton();
       if (result){
         showSuccessMessage();
         resetFormSettings();
@@ -43,10 +46,11 @@ function submitFormHandler(evt) {
         showErrorMessage();
       }
     });
+    abledSubmitButton();
   }
 }
 
-function resetButtonHandler(evt){
+function resetButtonHandler(evt) {
   evt.preventDefault();
   resetFormSettings();
 }
@@ -81,16 +85,14 @@ function resetFormSettings() {
   closeMapPopup();
   resetFormFilters();
   clearPristineErrorMessage();
-}
-
-function closeMapPopup() {
-  const popupPaneElement = document.querySelector('.leaflet-pane .leaflet-popup-pane').querySelector('.leaflet-zoom-animated');
-  if (popupPaneElement){
-    popupPaneElement.remove();
-  }
+  resetMapFilters();
+  initMapState();
+  setMapView();
+  clearPreviewImg();
 }
 
 function resetFormFilters() {
+  const formFeaturesFiltersContainerElement = document.querySelector ('.ad-form__element--wide.features');
   coordinateElement.value = `${CENTER_LAT}; ${CENTER_LNG}`;
   titleElement.value = '';
   roomNumberElement.selectedIndex = 0;
@@ -101,6 +103,28 @@ function resetFormFilters() {
   descriptionElement.value = '';
   advertismentSliderElement.noUiSlider.set(0);
   priceElement.value = 0;
+  setUnchecked(formFeaturesFiltersContainerElement);
+}
+
+function resetMapFilters() {
+  const housingTypeElement = document.querySelector('#housing-type');
+  const housingPriceElement = document.querySelector('#housing-price');
+  const housingRoomsElement = document.querySelector('#housing-rooms');
+  const housingGuestsElement = document.querySelector('#housing-guests');
+  const housingFeaturesContainerElement = document.querySelector('#housing-features');
+  housingTypeElement.selectedIndex = 0;
+  housingPriceElement.selectedIndex = 0;
+  housingRoomsElement.selectedIndex = 0;
+  housingGuestsElement.selectedIndex = 0;
+  setUnchecked(housingFeaturesContainerElement);
+}
+
+function setUnchecked(items) {
+  [...items.childNodes].forEach((item) => {
+    if (item.nodeName === 'INPUT') {
+      item.checked = false;
+    }
+  });
 }
 
 function clearPristineErrorMessage() {
@@ -113,7 +137,7 @@ function clearPristineErrorMessage() {
   );
 }
 
-function showErrorMessage(){
+function showErrorMessage() {
   errorMessageElement.setAttribute('style', 'z-index: 100');
   document.body.appendChild(errorMessageElement);
 }
@@ -121,6 +145,16 @@ function showErrorMessage(){
 function showSuccessMessage() {
   successMessageElement.setAttribute('style', 'z-index: 100');
   document.body.appendChild(successMessageElement);
+}
+
+function disableSubmitdButton() {
+  submitButtonElement.disabled = false;
+  submitButtonElement.classList.remove('ad-form__submit__disabled');
+}
+
+function abledSubmitButton() {
+  submitButtonElement.disabled = true;
+  submitButtonElement.classList.add('ad-form__submit__disabled');
 }
 
 function setStatusToChildNode({parentItem, tagName, status, className}) {
@@ -131,36 +165,21 @@ function setStatusToChildNode({parentItem, tagName, status, className}) {
   });
 }
 
-export function setInactiveState() {
-  advertisementFormElement.classList.add('ad-form--disabled');
-  advertisementFormElements.forEach((item) => {
-    item.disabled = true;
-  });
-  mapElements.forEach((mapItem) => {
-    if (mapItem.tagName === 'SELECT') {
-      mapItem.disabled = true;
-    }
-    if (mapItem.tagName === 'FIELDSET') {
-      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'add', className: 'map__feature_inactive'});
-    }
-  });
-  mapElement.disabled = true;
-}
-
-export function setActiveState() {
+export function setActiveAdvertisementForm() {
   advertisementFormElement.classList.remove('ad-form--disabled');
   advertisementFormElements.forEach((item) => {
     item.disabled = false;
   });
+}
+
+export function setActiveMapFilters() {
   mapElements.forEach((mapItem) => {
     if (mapItem.tagName === 'SELECT') {
       mapItem.disabled = false;
     }
     if (mapItem.tagName === 'FIELDSET') {
-      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'remove', className: 'map__feature_active'});
+      setStatusToChildNode({parentItem: mapItem, tagName: 'LABEL', status: 'remove', className: 'map__feature_inactive'});
     }
   });
   mapElement.disabled = false;
 }
-
-

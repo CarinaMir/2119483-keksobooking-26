@@ -1,10 +1,4 @@
-const realEstateTypes = {
-  'flat': 'Квартира',
-  'bungalow': 'Бунгало',
-  'house': 'Дом',
-  'palace':'Дворец',
-  'hotel': 'Отель'
-};
+import { realEstateTypes } from './constants.js';
 
 function getNameByRoomCount(value){
   if (value === 1){
@@ -23,7 +17,7 @@ function getPhotos(photos) {
   const fragment = document.createDocumentFragment();
   if (photos){
     photos.forEach((photo) => {
-      const imgItem = document. createElement('img');
+      const imgItem = document.createElement('img');
       imgItem.src = photo;
       imgItem.classList.add('popup__photo');
       imgItem.width = '45';
@@ -36,9 +30,9 @@ function getPhotos(photos) {
 
 export function generateSimilarAdvertisement(item) {
   const advertisementTemplateElement = document.querySelector('#card');
-  const advertisementContainer = document.createElement('div');
-  const advertisementItem = advertisementTemplateElement.cloneNode(true);
-  const advertisementItemContent = advertisementItem.content;
+  const advertisementContainerElement = document.createElement('div');
+  const advertisementItemElement = advertisementTemplateElement.cloneNode(true);
+  const advertisementItemContent = advertisementItemElement.content;
   const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = item.offer;
   advertisementItemContent.querySelector('.popup__title').textContent = title || '';
   advertisementItemContent.querySelector('.popup__text--address').textContent = address || '';
@@ -51,6 +45,6 @@ export function generateSimilarAdvertisement(item) {
   advertisementItemContent.querySelector('.popup__photos').textContent = '';
   advertisementItemContent.querySelector('.popup__photos').appendChild(getPhotos(photos));
   advertisementItemContent.querySelector('.popup__avatar').src = item.author.avatar || '';
-  advertisementContainer.appendChild(advertisementItemContent);
-  return advertisementContainer;
+  advertisementContainerElement.appendChild(advertisementItemContent);
+  return advertisementContainerElement;
 }
