@@ -17,7 +17,13 @@ const housingParkingElement = document.querySelector('#filter-parking');
 const housingWasherElement = document.querySelector('#filter-washer');
 const housingElevatorElement = document.querySelector('#filter-elevator');
 const housingConditionerElement = document.querySelector('#filter-conditioner');
-let advData;
+const storage = {
+  adeverts: []
+};
+
+function setAdverts(value) {
+  storage.adeverts = value;
+}
 
 const mainMarker = setMainMarkerSettings();
 const map = initMap();
@@ -39,7 +45,7 @@ housingFeaturesContainerElement.addEventListener('change', debounce(changeFilter
 function renderMapElemens() {
   getData().then((data) => {
     if (data) {
-      advData = data;
+      setAdverts(data);
       initMapState();
     }
   });
@@ -62,8 +68,8 @@ function changeFilterHandler() {
   const isWasher = housingWasherElement.checked;
   const isElevator = housingElevatorElement.checked;
   const isConditioner = housingConditionerElement.checked;
-  if (advData) {
-    resultData = filterSelector(advData, typeVal, 'type');
+  if (storage.adeverts) {
+    resultData = filterSelector(storage.adeverts, typeVal, 'type');
     resultData = filterSelector(resultData, roomVal, 'rooms');
     resultData = filterSelector(resultData, guestVal, 'guests');
     resultData = filterPriceSelector(resultData, priceVal, 'price');
@@ -136,7 +142,7 @@ function initMap() {
       lng: CENTER_LNG,
       lat: CENTER_LAT,
     },
-    10);
+    12);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -170,7 +176,7 @@ function addOrdinaryMarkersToMap(data) {
 }
 
 export function initMapState() {
-  const filteredData = getFilteredData(advData);
+  const filteredData = getFilteredData(storage.adeverts);
   addOrdinaryMarkersToMap(filteredData);
   setActiveMapFilters();
 }
@@ -187,7 +193,7 @@ export function setMapView() {
     lng: CENTER_LNG,
     lat: CENTER_LAT,
   },
-  10);
+  12);
 }
 
 export function closeMapPopup() {

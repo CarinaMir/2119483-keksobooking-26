@@ -59,6 +59,45 @@ function validFieldsByPristine(){
     validatePrice,
     'Максимальное значение — 100000'
   );
+
+  pristine.addValidator(
+    advertismentPriceElement,
+    validatePriceByType,
+    getMessageByValidatePrice
+  );
+
+}
+
+function getMessageByValidatePrice(value) {
+  const type = advertismentTypeElement.value;
+  if (type === 'bungalow' && value < 0) {
+    return 'Минимальная цена для Бунгало - 0 рублей';
+  } else if (type === 'flat' && value < 1000) {
+    return 'Минимальная цена для Квартиры- 1000 рублей';
+  } else if (type === 'hotel' && value < 3000) {
+    return 'Минимальная цена для Отеля - 3000 рублей';
+  } else if (type === 'house' && value < 5000) {
+    return 'Минимальная цена для Дома - 5000 рублей';
+  } else if (type === 'palace' && value < 10000) {
+    return 'Минимальная цена для Дворца - 10000 рублей';
+  }
+}
+
+function validatePriceByType(value) {
+  const type = advertismentTypeElement.value;
+  if (type === 'bungalow' && value >= 0) {
+    return true;
+  } else if (type === 'flat' && value >= 1000) {
+    return true;
+  } else if (type === 'hotel' && value >= 3000) {
+    return true;
+  } else if (type === 'house' && value >= 5000) {
+    return true;
+  } else if (type === 'palace' && value >= 10000) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function setsliderSettings() {
@@ -68,7 +107,7 @@ function setsliderSettings() {
       max: 100000,
     },
     start: 0,
-    step: 1000,
+    step: 1,
     connect: 'lower',
     format: {
       to: function (value) {
@@ -85,61 +124,22 @@ function changePriceHandler() {
   advertismentSliderElement.noUiSlider.set(advertismentPriceElement.value);
 }
 
-function changeTypeHandler(evt) {
-  const value = getSliderOptions(evt.target.value);
+function changeTypeHandler() {
+  const value = getSliderOptions();
   advertismentSliderElement.noUiSlider.updateOptions(value);
   advertismentSliderElement.noUiSlider.set(value.range.min);
   advertismentPriceElement.placeholder = value.range.min;
 }
 
-function getSliderOptions(value) {
-  switch(value) {
-    case 'bungalow':
-      return {
-        range: {
-          min: 0,
-          max: 100000
-        },
-        start: 0,
-        step: 1000
-      };
-    case 'flat':
-      return {
-        range: {
-          min: 1000,
-          max: 100000
-        },
-        start: 1000,
-        step: 1000
-      };
-    case 'hotel':
-      return {
-        range: {
-          min: 3000,
-          max: 100000
-        },
-        start: 3000,
-        step: 1000
-      };
-    case 'house':
-      return {
-        range: {
-          min: 5000,
-          max: 100000
-        },
-        start: 5000,
-        step: 1000
-      };
-    case 'palace':
-      return {
-        range: {
-          min: 10000,
-          max: 100000
-        },
-        start: 10000,
-        step: 1000
-      };
-  }
+function getSliderOptions() {
+  return {
+    range: {
+      min: 0,
+      max: 100000
+    },
+    start: 0,
+    step: 1
+  };
 }
 
 function setAppropriateTimeinValueHander() {

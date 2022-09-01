@@ -24,6 +24,8 @@ export function setImagesToForm() {
 
 export function clearPreviewImg() {
   const realEstatePreviewElement = document.querySelector('.ad-form__photo img');
+  realEstateChooserElement.value = '';
+  avatarChooserElement.value = '';
   avatarPreviewElement.src = 'img/muffin-grey.svg';
   if (realEstatePreviewElement){
     realEstatePhotoElement.removeChild(realEstatePreviewElement);
