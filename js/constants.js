@@ -23,6 +23,14 @@ export const URL = 'https://26.javascript.pages.academy/keksobooking';
 export const ALERT_SHOW_TIME = 5000;
 export const RENDER_DELAY = 500;
 export const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+export const SCALE = 12;
+export const MAX_AD = 10;
+export const ORD_ICON_URL = './img/pin.svg';
+export const ORD_ICON_SIZE = 40;
+export const ORD_ICON_ANCHOR = 20;
+export const MAIN_ICON_URL = './img/main-pin.svg';
+export const MAIN_ICON_SIZE = 52;
+export const MAIN_ICON_ANCHOR = 26;
 export const realEstateTypes = {
   'flat': 'Квартира',
   'bungalow': 'Бунгало',

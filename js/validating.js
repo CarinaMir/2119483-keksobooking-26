@@ -1,4 +1,5 @@
 import { validateTitleLenght, validatePrice } from './utils.js';
+import { clearPristineErrorMessage } from './form.js';
 
 const formElement = document.querySelector('.ad-form');
 const advertismentTitleElement = formElement.querySelector('#title');
@@ -26,10 +27,11 @@ advertismentRoomElement.addEventListener('change', selectFieldChangedHandler);
 advertismentGuestElement.addEventListener('change', selectFieldChangedHandler);
 validFieldsByPristine();
 
-noUiSlider.create(advertismentSliderElement, setsliderSettings());
+noUiSlider.create(advertismentSliderElement, setSliderSettings());
 advertismentSliderElement.noUiSlider.on('update', () => {
   advertismentPriceElement.value = advertismentSliderElement.noUiSlider.get();
 });
+
 advertismentPriceElement.addEventListener('change', changePriceHandler);
 advertismentTypeElement.addEventListener('change', changeTypeHandler);
 advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
@@ -100,7 +102,7 @@ function validatePriceByType(value) {
   }
 }
 
-function setsliderSettings() {
+function setSliderSettings() {
   return {
     range: {
       min: 0,
@@ -124,22 +126,61 @@ function changePriceHandler() {
   advertismentSliderElement.noUiSlider.set(advertismentPriceElement.value);
 }
 
-function changeTypeHandler() {
-  const value = getSliderOptions();
+function changeTypeHandler(evt) {
+  clearPristineErrorMessage();
+  const value = getSliderOptions(evt.target.value);
   advertismentSliderElement.noUiSlider.updateOptions(value);
-  advertismentSliderElement.noUiSlider.set(value.range.min);
-  advertismentPriceElement.placeholder = value.range.min;
+  advertismentPriceElement.placeholder = value.start;
 }
 
-function getSliderOptions() {
-  return {
-    range: {
-      min: 0,
-      max: 100000
-    },
-    start: 0,
-    step: 1
-  };
+function getSliderOptions(value) {
+  switch(value) {
+    case 'bungalow':
+      return {
+        range: {
+          min: 0,
+          max: 100000
+        },
+        start: 0,
+        step: 1
+      };
+    case 'flat':
+      return {
+        range: {
+          min: 0,
+          max: 100000
+        },
+        start: 1000,
+        step: 1
+      };
+    case 'hotel':
+      return {
+        range: {
+          min: 0,
+          max: 100000
+        },
+        start: 3000,
+        step: 1
+      };
+    case 'house':
+      return {
+        range: {
+          min: 0,
+          max: 100000
+        },
+        start: 5000,
+        step: 1
+      };
+    case 'palace':
+      return {
+        range: {
+          min: 0,
+          max: 100000
+        },
+        start: 10000,
+        step: 1
+      };
+  }
 }
 
 function setAppropriateTimeinValueHander() {

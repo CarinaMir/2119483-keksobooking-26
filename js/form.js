@@ -127,16 +127,6 @@ function setUnchecked(items) {
   });
 }
 
-function clearPristineErrorMessage() {
-  const pristineErrorMessages = [...document.querySelectorAll('.pristine-error')];
-  pristineErrorMessages.forEach((errorMessage) => {
-    if (errorMessage.textContent.length > 0){
-      errorMessage.textContent = '';
-    }
-  }
-  );
-}
-
 function showErrorMessage() {
   errorMessageElement.setAttribute('style', 'z-index: 100');
   document.body.appendChild(errorMessageElement);
@@ -182,4 +172,14 @@ export function setActiveMapFilters() {
     }
   });
   mapElement.disabled = false;
+}
+
+export function clearPristineErrorMessage() {
+  const pristineErrorMessages = [...document.querySelectorAll('.pristine-error')];
+  pristineErrorMessages.forEach((errorMessage) => {
+    if (errorMessage.textContent.length > 0){
+      errorMessage.textContent = '';
+    }
+  }
+  );
 }
