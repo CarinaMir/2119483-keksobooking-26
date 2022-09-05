@@ -1,6 +1,17 @@
-import { generateSimilarAdvertisement } from './generating-similars.js';
+import { generateSimilarAdvertisement } from './similars.js';
 import { setActiveAdvertisementForm, setActiveMapFilters } from './form.js';
-import { CENTER_LAT, CENTER_LNG, RENDER_DELAY, SCALE, MAX_AD, ORD_ICON_URL, ORD_ICON_SIZE, ORD_ICON_ANCHOR, MAIN_ICON_URL, MAIN_ICON_SIZE, MAIN_ICON_ANCHOR } from './constants.js';
+import {
+  CENTER_LAT,
+  CENTER_LNG,
+  RENDER_DELAY,
+  SCALE, MAX_AD,
+  ORD_ICON_URL,
+  ORD_ICON_SIZE,
+  ORD_ICON_ANCHOR,
+  MAIN_ICON_URL,
+  MAIN_ICON_SIZE,
+  MAIN_ICON_ANCHOR
+} from './constants.js';
 import { getData } from './api.js';
 import { debounce } from './utils.js';
 

@@ -217,10 +217,7 @@ function validateGuestsByRoom() {
   const threeRoomsForGuests = (roomValue === 3  && (guestValue <= 3 && guestValue > 0));
   const hundredRoomsNotForGuests = (roomValue === 100 && guestValue === 0);
   const isMatched = roomForGuest || twoRoomsForGuests || threeRoomsForGuests || hundredRoomsNotForGuests;
-  if (isMatched) {
-    return true;
-  }
-  return false;
+  return isMatched;
 }
 
 export { pristine };

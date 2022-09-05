@@ -3,7 +3,7 @@ import { sendData } from './api.js';
 import { setMarker, initMapState, setMapView, closeMapPopup} from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
 import { isEscapeKey } from './utils.js';
-import { setImagesToForm, clearPreviewImg }  from './adding-photo.js';
+import { setImagesToForm, clearPreviewImg }  from './photo.js';
 
 const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormElements = [...advertisementFormElement.childNodes];
@@ -46,7 +46,7 @@ function submitFormHandler(evt) {
         showErrorMessage();
       }
     });
-    abledSubmitButton();
+    enabledSubmitButton();
   }
 }
 
@@ -142,7 +142,7 @@ function disableSubmitdButton() {
   submitButtonElement.classList.remove('ad-form__submit__disabled');
 }
 
-function abledSubmitButton() {
+function enabledSubmitButton() {
   submitButtonElement.disabled = true;
   submitButtonElement.classList.add('ad-form__submit__disabled');
 }
