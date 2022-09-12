@@ -13,8 +13,9 @@ function changeRealEstatePhotoHandler() {
   const imgItem = document.createElement('img');
   imgItem.classList.add('ad-form__preview_img');
   realEstatePhotoElement.appendChild(imgItem);
-  const realEstatePreviewElement = document.querySelector('.ad-form__photo img');
-  setPhoto(realEstateChooserElement, realEstatePreviewElement);
+  const realEstatePreviewElements = document.querySelectorAll('.ad-form__photo img');
+  const realEstatePreviewLastElement = realEstatePreviewElements.length - 1;
+  setPhoto(realEstateChooserElement, realEstatePreviewElements[realEstatePreviewLastElement]);
 }
 
 export function setImagesToForm() {
@@ -23,9 +24,11 @@ export function setImagesToForm() {
 }
 
 export function clearPreviewImg() {
-  const realEstatePreviewElement = document.querySelector('.ad-form__photo img');
+  const realEstatePreviewElements = document.querySelectorAll('.ad-form__photo img');
+  realEstateChooserElement.value = '';
+  avatarChooserElement.value = '';
   avatarPreviewElement.src = 'img/muffin-grey.svg';
-  if (realEstatePreviewElement){
-    realEstatePhotoElement.removeChild(realEstatePreviewElement);
+  if (realEstatePreviewElements){
+    realEstatePreviewElements.forEach((previewItem) => {realEstatePhotoElement.removeChild(previewItem);});
   }
 }

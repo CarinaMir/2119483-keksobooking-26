@@ -1,6 +1,17 @@
-import { generateSimilarAdvertisement } from './generating-similars.js';
+import { generateSimilarAdvertisement } from './similars.js';
 import { setActiveAdvertisementForm, setActiveMapFilters } from './form.js';
-import { CENTER_LAT, CENTER_LNG, RENDER_DELAY } from './constants.js';
+import {
+  CENTER_LAT,
+  CENTER_LNG,
+  RENDER_DELAY,
+  SCALE, MAX_AD,
+  ORD_ICON_URL,
+  ORD_ICON_SIZE,
+  ORD_ICON_ANCHOR,
+  MAIN_ICON_URL,
+  MAIN_ICON_SIZE,
+  MAIN_ICON_ANCHOR
+} from './constants.js';
 import { getData } from './api.js';
 import { debounce } from './utils.js';
 
@@ -17,7 +28,13 @@ const housingParkingElement = document.querySelector('#filter-parking');
 const housingWasherElement = document.querySelector('#filter-washer');
 const housingElevatorElement = document.querySelector('#filter-elevator');
 const housingConditionerElement = document.querySelector('#filter-conditioner');
-let advData;
+const storage = {
+  adeverts: []
+};
+
+function setAdverts(value) {
+  storage.adeverts = value;
+}
 
 const mainMarker = setMainMarkerSettings();
 const map = initMap();
@@ -39,14 +56,14 @@ housingFeaturesContainerElement.addEventListener('change', debounce(changeFilter
 function renderMapElemens() {
   getData().then((data) => {
     if (data) {
-      advData = data;
+      setAdverts(data);
       initMapState();
     }
   });
 }
 
 function getFilteredData(items) {
-  return items.slice(0, 10);
+  return items.slice(0, MAX_AD);
 }
 
 function changeFilterHandler() {
@@ -62,8 +79,8 @@ function changeFilterHandler() {
   const isWasher = housingWasherElement.checked;
   const isElevator = housingElevatorElement.checked;
   const isConditioner = housingConditionerElement.checked;
-  if (advData) {
-    resultData = filterSelector(advData, typeVal, 'type');
+  if (storage.adeverts) {
+    resultData = filterSelector(storage.adeverts, typeVal, 'type');
     resultData = filterSelector(resultData, roomVal, 'rooms');
     resultData = filterSelector(resultData, guestVal, 'guests');
     resultData = filterPriceSelector(resultData, priceVal, 'price');
@@ -78,15 +95,15 @@ function changeFilterHandler() {
   }
 }
 
-function filterPriceSelector(data, value) {
+function filterPriceSelector(data, value, fieldName) {
   if (value === 'middle') {
-    return data.filter((item) => Number(item.offer.price) > 10000 && Number(item.offer.price) <= 50000);
+    return data.filter((item) => Number(item.offer[fieldName]) > 10000 && Number(item.offer[fieldName]) <= 50000);
   }
   if (value === 'low') {
-    return data.filter((item) => Number(item.offer.price) <= 10000);
+    return data.filter((item) => Number(item.offer[fieldName]) <= 10000);
   }
   if (value === 'high') {
-    return data.filter((item) => Number(item.offer.price) > 50000);
+    return data.filter((item) => Number(item.offer[fieldName]) > 50000);
   }
   return data;
 }
@@ -111,9 +128,9 @@ function filterFeatureSelector(data, value, fieldName) {
 
 function setMainMarkerSettings() {
   const markerIcon = L.icon({
-    iconUrl: './img/main-pin.svg',
-    iconSize: [52, 52],
-    iconAnchor: [26, 52],
+    iconUrl: MAIN_ICON_URL,
+    iconSize: [MAIN_ICON_SIZE, MAIN_ICON_SIZE],
+    iconAnchor: [MAIN_ICON_ANCHOR, MAIN_ICON_SIZE],
   });
   const marker = L.marker({
     lng: CENTER_LNG,
@@ -136,7 +153,7 @@ function initMap() {
       lng: CENTER_LNG,
       lat: CENTER_LAT,
     },
-    10);
+    SCALE);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -147,9 +164,9 @@ function initMap() {
 function addOrdinaryMarkersToMap(data) {
   const advertisementItems = data;
   const ordinaryIcon = L.icon({
-    iconUrl: './img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconUrl: ORD_ICON_URL,
+    iconSize: [ORD_ICON_SIZE, ORD_ICON_SIZE],
+    iconAnchor: [ORD_ICON_ANCHOR, ORD_ICON_ANCHOR],
   });
 
   markerGroup.clearLayers();
@@ -170,7 +187,7 @@ function addOrdinaryMarkersToMap(data) {
 }
 
 export function initMapState() {
-  const filteredData = getFilteredData(advData);
+  const filteredData = getFilteredData(storage.adeverts);
   addOrdinaryMarkersToMap(filteredData);
   setActiveMapFilters();
 }
@@ -187,7 +204,7 @@ export function setMapView() {
     lng: CENTER_LNG,
     lat: CENTER_LAT,
   },
-  10);
+  SCALE);
 }
 
 export function closeMapPopup() {

@@ -33,7 +33,19 @@ export function generateSimilarAdvertisement(item) {
   const advertisementContainerElement = document.createElement('div');
   const advertisementItemElement = advertisementTemplateElement.cloneNode(true);
   const advertisementItemContent = advertisementItemElement.content;
-  const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = item.offer;
+  const {
+    title,
+    address,
+    price,
+    type,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    features,
+    description,
+    photos
+  } = item.offer;
   advertisementItemContent.querySelector('.popup__title').textContent = title || '';
   advertisementItemContent.querySelector('.popup__text--address').textContent = address || '';
   advertisementItemContent.querySelector('.popup__text--price').textContent = `${price} ₽/ночь` || '';

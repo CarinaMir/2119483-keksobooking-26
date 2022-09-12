@@ -3,7 +3,7 @@ import { sendData } from './api.js';
 import { setMarker, initMapState, setMapView, closeMapPopup} from './map.js';
 import { CENTER_LAT, CENTER_LNG} from './constants.js';
 import { isEscapeKey } from './utils.js';
-import { setImagesToForm, clearPreviewImg }  from './adding-photo.js';
+import { setImagesToForm, clearPreviewImg }  from './photo.js';
 
 const advertisementFormElement = document.querySelector('.ad-form');
 const advertisementFormElements = [...advertisementFormElement.childNodes];
@@ -46,7 +46,7 @@ function submitFormHandler(evt) {
         showErrorMessage();
       }
     });
-    abledSubmitButton();
+    enabledSubmitButton();
   }
 }
 
@@ -127,16 +127,6 @@ function setUnchecked(items) {
   });
 }
 
-function clearPristineErrorMessage() {
-  const pristineErrorMessages = [...document.querySelectorAll('.pristine-error')];
-  pristineErrorMessages.forEach((errorMessage) => {
-    if (errorMessage.textContent.length > 0){
-      errorMessage.textContent = '';
-    }
-  }
-  );
-}
-
 function showErrorMessage() {
   errorMessageElement.setAttribute('style', 'z-index: 100');
   document.body.appendChild(errorMessageElement);
@@ -152,7 +142,7 @@ function disableSubmitdButton() {
   submitButtonElement.classList.remove('ad-form__submit__disabled');
 }
 
-function abledSubmitButton() {
+function enabledSubmitButton() {
   submitButtonElement.disabled = true;
   submitButtonElement.classList.add('ad-form__submit__disabled');
 }
@@ -182,4 +172,14 @@ export function setActiveMapFilters() {
     }
   });
   mapElement.disabled = false;
+}
+
+export function clearPristineErrorMessage() {
+  const pristineErrorMessages = [...document.querySelectorAll('.pristine-error')];
+  pristineErrorMessages.forEach((errorMessage) => {
+    if (errorMessage.textContent.length > 0){
+      errorMessage.textContent = '';
+    }
+  }
+  );
 }

@@ -1,4 +1,5 @@
 import { validateTitleLenght, validatePrice } from './utils.js';
+import { clearPristineErrorMessage } from './form.js';
 
 const formElement = document.querySelector('.ad-form');
 const advertismentTitleElement = formElement.querySelector('#title');
@@ -26,10 +27,11 @@ advertismentRoomElement.addEventListener('change', selectFieldChangedHandler);
 advertismentGuestElement.addEventListener('change', selectFieldChangedHandler);
 validFieldsByPristine();
 
-noUiSlider.create(advertismentSliderElement, setsliderSettings());
+noUiSlider.create(advertismentSliderElement, setSliderSettings());
 advertismentSliderElement.noUiSlider.on('update', () => {
   advertismentPriceElement.value = advertismentSliderElement.noUiSlider.get();
 });
+
 advertismentPriceElement.addEventListener('change', changePriceHandler);
 advertismentTypeElement.addEventListener('change', changeTypeHandler);
 advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
@@ -59,16 +61,55 @@ function validFieldsByPristine(){
     validatePrice,
     'Максимальное значение — 100000'
   );
+
+  pristine.addValidator(
+    advertismentPriceElement,
+    validatePriceByType,
+    getMessageByValidatePrice
+  );
+
 }
 
-function setsliderSettings() {
+function getMessageByValidatePrice(value) {
+  const type = advertismentTypeElement.value;
+  if (type === 'bungalow' && value < 0) {
+    return 'Минимальная цена для Бунгало - 0 рублей';
+  } else if (type === 'flat' && value < 1000) {
+    return 'Минимальная цена для Квартиры- 1000 рублей';
+  } else if (type === 'hotel' && value < 3000) {
+    return 'Минимальная цена для Отеля - 3000 рублей';
+  } else if (type === 'house' && value < 5000) {
+    return 'Минимальная цена для Дома - 5000 рублей';
+  } else if (type === 'palace' && value < 10000) {
+    return 'Минимальная цена для Дворца - 10000 рублей';
+  }
+}
+
+function validatePriceByType(value) {
+  const type = advertismentTypeElement.value;
+  if (type === 'bungalow' && value >= 0) {
+    return true;
+  } else if (type === 'flat' && value >= 1000) {
+    return true;
+  } else if (type === 'hotel' && value >= 3000) {
+    return true;
+  } else if (type === 'house' && value >= 5000) {
+    return true;
+  } else if (type === 'palace' && value >= 10000) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function setSliderSettings() {
   return {
     range: {
       min: 0,
       max: 100000,
     },
     start: 0,
-    step: 1000,
+    step: 1,
     connect: 'lower',
     format: {
       to: function (value) {
@@ -86,10 +127,10 @@ function changePriceHandler() {
 }
 
 function changeTypeHandler(evt) {
+  clearPristineErrorMessage();
   const value = getSliderOptions(evt.target.value);
   advertismentSliderElement.noUiSlider.updateOptions(value);
-  advertismentSliderElement.noUiSlider.set(value.range.min);
-  advertismentPriceElement.placeholder = value.range.min;
+  advertismentPriceElement.placeholder = value.start;
 }
 
 function getSliderOptions(value) {
@@ -101,43 +142,43 @@ function getSliderOptions(value) {
           max: 100000
         },
         start: 0,
-        step: 1000
+        step: 1
       };
     case 'flat':
       return {
         range: {
-          min: 1000,
+          min: 0,
           max: 100000
         },
         start: 1000,
-        step: 1000
+        step: 1
       };
     case 'hotel':
       return {
         range: {
-          min: 3000,
+          min: 0,
           max: 100000
         },
         start: 3000,
-        step: 1000
+        step: 1
       };
     case 'house':
       return {
         range: {
-          min: 5000,
+          min: 0,
           max: 100000
         },
         start: 5000,
-        step: 1000
+        step: 1
       };
     case 'palace':
       return {
         range: {
-          min: 10000,
+          min: 0,
           max: 100000
         },
         start: 10000,
-        step: 1000
+        step: 1
       };
   }
 }
@@ -176,10 +217,7 @@ function validateGuestsByRoom() {
   const threeRoomsForGuests = (roomValue === 3  && (guestValue <= 3 && guestValue > 0));
   const hundredRoomsNotForGuests = (roomValue === 100 && guestValue === 0);
   const isMatched = roomForGuest || twoRoomsForGuests || threeRoomsForGuests || hundredRoomsNotForGuests;
-  if (isMatched) {
-    return true;
-  }
-  return false;
+  return isMatched;
 }
 
 export { pristine };
