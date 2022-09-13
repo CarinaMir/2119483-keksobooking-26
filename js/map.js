@@ -4,16 +4,18 @@ import {
   CENTER_LAT,
   CENTER_LNG,
   RENDER_DELAY,
-  SCALE, MAX_AD,
+  SCALE,
+  ADVERTISEMENT_AMOUNT,
   ORD_ICON_URL,
   ORD_ICON_SIZE,
   ORD_ICON_ANCHOR,
   MAIN_ICON_URL,
   MAIN_ICON_SIZE,
-  MAIN_ICON_ANCHOR
+  MAIN_ICON_ANCHOR,
+  MAX_DIGITS
 } from './constants.js';
 import { getData } from './api.js';
-import { debounce } from './utils.js';
+import { debounce, filterSelectors, filterPriceSelector, filterFeatureSelector} from './utils.js';
 
 const mapElement = document.querySelector('#map-canvas');
 const coordinateElement = document.querySelector('#address');
@@ -43,7 +45,7 @@ const markerGroup = L.layerGroup().addTo(map);
 mainMarker.addTo(map);
 mainMarker.on('moveend', (evt) => {
   const coordinate = evt.target.getLatLng();
-  coordinateElement.value = `${(coordinate.lat).toFixed(5)}; ${coordinate.lng.toFixed(5)}`;
+  coordinateElement.value = `${(coordinate.lat).toFixed(MAX_DIGITS)}; ${coordinate.lng.toFixed(MAX_DIGITS)}`;
 });
 renderMapElemens();
 
@@ -63,13 +65,20 @@ function renderMapElemens() {
 }
 
 function getFilteredData(items) {
-  return items.slice(0, MAX_AD);
+  return items.slice(0, ADVERTISEMENT_AMOUNT);
 }
 
 function changeFilterHandler() {
   let resultData = [];
   markerGroup.clearLayers();
-  const typeVal = housingTypeElement.value;
+  if (storage.adeverts) {
+    resultData = getFilteredData(storage.adeverts.filter(getFilter));
+    addOrdinaryMarkersToMap(resultData);
+  }
+}
+
+function getFilter(item) {
+  const typeVal =housingTypeElement.value;
   const priceVal = housingPriceElement.value;
   const roomVal = housingRoomsElement.value;
   const guestVal = housingGuestsElement.value;
@@ -79,51 +88,17 @@ function changeFilterHandler() {
   const isWasher = housingWasherElement.checked;
   const isElevator = housingElevatorElement.checked;
   const isConditioner = housingConditionerElement.checked;
-  if (storage.adeverts) {
-    resultData = filterSelector(storage.adeverts, typeVal, 'type');
-    resultData = filterSelector(resultData, roomVal, 'rooms');
-    resultData = filterSelector(resultData, guestVal, 'guests');
-    resultData = filterPriceSelector(resultData, priceVal, 'price');
-    resultData = filterFeatureSelector(resultData, isWifi, 'wifi');
-    resultData = filterFeatureSelector(resultData, isDishwasher, 'dishwasher');
-    resultData = filterFeatureSelector(resultData, isParking, 'parking');
-    resultData = filterFeatureSelector(resultData, isWasher, 'washer');
-    resultData = filterFeatureSelector(resultData, isElevator, 'elevator');
-    resultData = filterFeatureSelector(resultData, isConditioner, 'conditioner');
-    resultData = getFilteredData(resultData);
-    addOrdinaryMarkersToMap(resultData);
-  }
-}
-
-function filterPriceSelector(data, value, fieldName) {
-  if (value === 'middle') {
-    return data.filter((item) => Number(item.offer[fieldName]) > 10000 && Number(item.offer[fieldName]) <= 50000);
-  }
-  if (value === 'low') {
-    return data.filter((item) => Number(item.offer[fieldName]) <= 10000);
-  }
-  if (value === 'high') {
-    return data.filter((item) => Number(item.offer[fieldName]) > 50000);
-  }
-  return data;
-}
-
-function filterSelector(data, value, fieldName) {
-  if (value !== 'any') {
-    return data.filter((item) => item.offer[fieldName].toString() === value);
-  }
-  return data;
-}
-
-function filterFeatureSelector(data, value, fieldName) {
-  if (value) {
-    return data.filter((item) => {
-      if (item.offer.features) {
-        return item.offer.features.includes(fieldName);
-      }
-    });
-  }
-  return data;
+  const resultFilter = filterSelectors(item, 'type', typeVal)
+                        && filterPriceSelector(item, 'price', priceVal)
+                        && filterSelectors(item, 'rooms', roomVal)
+                        && filterSelectors(item, 'guests', guestVal)
+                        && filterFeatureSelector(item, 'wifi', isWifi)
+                        && filterFeatureSelector(item, 'dishwasher', isDishwasher)
+                        && filterFeatureSelector(item, 'parking', isParking)
+                        && filterFeatureSelector(item, 'washer', isWasher)
+                        && filterFeatureSelector(item, 'elevator', isElevator)
+                        && filterFeatureSelector(item, 'conditioner', isConditioner);
+  return resultFilter;
 }
 
 function setMainMarkerSettings() {
@@ -210,3 +185,4 @@ export function setMapView() {
 export function closeMapPopup() {
   map.closePopup();
 }
+
