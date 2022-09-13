@@ -15,7 +15,7 @@ import {
   MAX_DIGITS
 } from './constants.js';
 import { getData } from './api.js';
-import { debounce, filterSelectors, filterPriceSelector, filterFeatureSelector} from './utils.js';
+import { debounce, verifySelectorByFieldName, verifyPriceSelector, verifyFeatureSelector} from './utils.js';
 
 const mapElement = document.querySelector('#map-canvas');
 const coordinateElement = document.querySelector('#address');
@@ -88,16 +88,16 @@ function getFilter(item) {
   const isWasher = housingWasherElement.checked;
   const isElevator = housingElevatorElement.checked;
   const isConditioner = housingConditionerElement.checked;
-  const resultFilter = filterSelectors(item, 'type', typeVal)
-                        && filterPriceSelector(item, 'price', priceVal)
-                        && filterSelectors(item, 'rooms', roomVal)
-                        && filterSelectors(item, 'guests', guestVal)
-                        && filterFeatureSelector(item, 'wifi', isWifi)
-                        && filterFeatureSelector(item, 'dishwasher', isDishwasher)
-                        && filterFeatureSelector(item, 'parking', isParking)
-                        && filterFeatureSelector(item, 'washer', isWasher)
-                        && filterFeatureSelector(item, 'elevator', isElevator)
-                        && filterFeatureSelector(item, 'conditioner', isConditioner);
+  const resultFilter = verifySelectorByFieldName(item, 'type', typeVal)
+                        && verifyPriceSelector(item, 'price', priceVal)
+                        && verifySelectorByFieldName(item, 'rooms', roomVal)
+                        && verifySelectorByFieldName(item, 'guests', guestVal)
+                        && verifyFeatureSelector(item, 'wifi', isWifi)
+                        && verifyFeatureSelector(item, 'dishwasher', isDishwasher)
+                        && verifyFeatureSelector(item, 'parking', isParking)
+                        && verifyFeatureSelector(item, 'washer', isWasher)
+                        && verifyFeatureSelector(item, 'elevator', isElevator)
+                        && verifyFeatureSelector(item, 'conditioner', isConditioner);
   return resultFilter;
 }
 

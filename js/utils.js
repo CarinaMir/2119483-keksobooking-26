@@ -40,15 +40,14 @@ export function setPhoto(chooserName, fieldName) {
   }
 }
 
-export function filterSelectors(item, fieldName, value) {
-
+export function verifySelectorByFieldName(item, fieldName, value) {
   if (value !== 'any') {
     return ((item.offer[fieldName].toString()) === value);
   }
   return true;
 }
 
-export function filterPriceSelector(item, fieldName, value) {
+export function verifyPriceSelector(item, fieldName, value) {
   if (value === 'middle') {
     return  (Number(item.offer[fieldName]) > MIN_REAL_ESTATE_PRICE && Number(item.offer[fieldName]) <= MAX_REAL_ESTATE_PRICE);
   }
@@ -61,7 +60,7 @@ export function filterPriceSelector(item, fieldName, value) {
   return true;
 }
 
-export function filterFeatureSelector(item, fieldName, value) {
+export function verifyFeatureSelector(item, fieldName, value) {
   if (value) {
     if (item.offer.features !== undefined) {
       return item.offer.features.includes(fieldName);
