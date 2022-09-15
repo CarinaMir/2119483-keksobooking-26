@@ -14,7 +14,6 @@ import {
   MAIN_ICON_ANCHOR,
   MAX_DIGITS
 } from './constants.js';
-import { getData } from './api.js';
 import { debounce, verifySelectorByFieldName, verifyPriceSelector, verifyFeatureSelector} from './utils.js';
 
 const mapElement = document.querySelector('#map-canvas');
@@ -30,6 +29,7 @@ const housingParkingElement = document.querySelector('#filter-parking');
 const housingWasherElement = document.querySelector('#filter-washer');
 const housingElevatorElement = document.querySelector('#filter-elevator');
 const housingConditionerElement = document.querySelector('#filter-conditioner');
+let mainMarker, map, markerGroup;
 const storage = {
   adeverts: []
 };
@@ -38,30 +38,27 @@ function setAdverts(value) {
   storage.adeverts = value;
 }
 
-const mainMarker = setMainMarkerSettings();
-const map = initMap();
-const markerGroup = L.layerGroup().addTo(map);
-
-mainMarker.addTo(map);
-mainMarker.on('moveend', (evt) => {
-  const coordinate = evt.target.getLatLng();
-  coordinateElement.value = `${(coordinate.lat).toFixed(MAX_DIGITS)}; ${coordinate.lng.toFixed(MAX_DIGITS)}`;
-});
-renderMapElemens();
-
-housingTypeElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingPriceElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingRoomsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingGuestsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingFeaturesContainerElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-
-function renderMapElemens() {
-  getData().then((data) => {
-    if (data) {
-      setAdverts(data);
-      initMapState();
-    }
+export function initMap() {
+  mainMarker = setMainMarkerSettings();
+  map = createMap();
+  markerGroup = L.layerGroup().addTo(map);
+  mainMarker.addTo(map);
+  mainMarker.on('moveend', (evt) => {
+    const coordinate = evt.target.getLatLng();
+    coordinateElement.value = `${(coordinate.lat).toFixed(MAX_DIGITS)}; ${coordinate.lng.toFixed(MAX_DIGITS)}`;
   });
+  housingTypeElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingPriceElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingRoomsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingGuestsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingFeaturesContainerElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+}
+
+export function renderMapElemens(data) {
+  if (data) {
+    setAdverts(data);
+    initMapState();
+  }
 }
 
 function getFilteredData(items) {
@@ -118,7 +115,7 @@ function setMainMarkerSettings() {
   return marker;
 }
 
-function initMap() {
+function createMap() {
   const card = L.map(mapElement)
     .on('load', () => {
       setActiveAdvertisementForm();

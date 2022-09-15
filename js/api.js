@@ -7,9 +7,8 @@ async function getData() {
     if (response.ok) {
       const data = await response.json();
       return data;
-    } else {
-      throw new Error(`${response.status} - ${response.statusText}`);
     }
+    throw new Error(`${response.status} - ${response.statusText}`);
   }
   catch (err) {
     showAlert(err);
@@ -25,9 +24,8 @@ async function sendData(form) {
     const response = await fetch(URL, config);
     if (response.ok) {
       return true;
-    } else {
-      throw new Error(`${response.status} - ${response.statusText}`);
     }
+    throw new Error(`${response.status} - ${response.statusText}`);
   }
   catch (err) {
     showAlert(err);

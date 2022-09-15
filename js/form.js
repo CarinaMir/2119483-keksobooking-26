@@ -150,7 +150,12 @@ function enabledSubmitButton() {
 function setStatusToChildNode({parentItem, tagName, status, className}) {
   [...parentItem.childNodes].forEach((item) => {
     if (item.tagName === tagName) {
-      return status === 'remove' ? item.classList.remove(className) : item.classList.add(className);
+      if (status === 'remove') {
+        item.classList.remove(className);
+      }
+      else {
+        item.classList.add(className);
+      }
     }
   });
 }
@@ -175,8 +180,8 @@ export function setActiveMapFilters() {
 }
 
 export function clearPristineErrorMessage() {
-  const pristineErrorMessages = [...document.querySelectorAll('.pristine-error')];
-  pristineErrorMessages.forEach((errorMessage) => {
+  const pristineErrorMessagesElements = [...document.querySelectorAll('.pristine-error')];
+  pristineErrorMessagesElements.forEach((errorMessage) => {
     if (errorMessage.textContent.length > 0){
       errorMessage.textContent = '';
     }
