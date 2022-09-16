@@ -14,7 +14,6 @@ import {
   MAIN_ICON_ANCHOR,
   MAX_DIGITS
 } from './constants.js';
-import { getData } from './api.js';
 import { debounce, verifySelectorByFieldName, verifyPriceSelector, verifyFeatureSelector} from './utils.js';
 
 const mapElement = document.querySelector('#map-canvas');
@@ -30,54 +29,18 @@ const housingParkingElement = document.querySelector('#filter-parking');
 const housingWasherElement = document.querySelector('#filter-washer');
 const housingElevatorElement = document.querySelector('#filter-elevator');
 const housingConditionerElement = document.querySelector('#filter-conditioner');
+let mainMarker, map, markerGroup;
 const storage = {
   adeverts: []
 };
 
-function setAdverts(value) {
+const setAdverts = (value) => {
   storage.adeverts = value;
-}
+};
 
-const mainMarker = setMainMarkerSettings();
-const map = initMap();
-const markerGroup = L.layerGroup().addTo(map);
+const getFilteredData = (items) => items.slice(0, ADVERTISEMENT_AMOUNT);
 
-mainMarker.addTo(map);
-mainMarker.on('moveend', (evt) => {
-  const coordinate = evt.target.getLatLng();
-  coordinateElement.value = `${(coordinate.lat).toFixed(MAX_DIGITS)}; ${coordinate.lng.toFixed(MAX_DIGITS)}`;
-});
-renderMapElemens();
-
-housingTypeElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingPriceElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingRoomsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingGuestsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-housingFeaturesContainerElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
-
-function renderMapElemens() {
-  getData().then((data) => {
-    if (data) {
-      setAdverts(data);
-      initMapState();
-    }
-  });
-}
-
-function getFilteredData(items) {
-  return items.slice(0, ADVERTISEMENT_AMOUNT);
-}
-
-function changeFilterHandler() {
-  let resultData = [];
-  markerGroup.clearLayers();
-  if (storage.adeverts) {
-    resultData = getFilteredData(storage.adeverts.filter(getFilter));
-    addOrdinaryMarkersToMap(resultData);
-  }
-}
-
-function getFilter(item) {
+const getFilter = (item) => {
   const typeVal =housingTypeElement.value;
   const priceVal = housingPriceElement.value;
   const roomVal = housingRoomsElement.value;
@@ -99,9 +62,9 @@ function getFilter(item) {
                         && verifyFeatureSelector(item, 'elevator', isElevator)
                         && verifyFeatureSelector(item, 'conditioner', isConditioner);
   return resultFilter;
-}
+};
 
-function setMainMarkerSettings() {
+const setMainMarkerSettings = () => {
   const markerIcon = L.icon({
     iconUrl: MAIN_ICON_URL,
     iconSize: [MAIN_ICON_SIZE, MAIN_ICON_SIZE],
@@ -116,9 +79,9 @@ function setMainMarkerSettings() {
     icon: markerIcon
   },);
   return marker;
-}
+};
 
-function initMap() {
+const createMap = () => {
   const card = L.map(mapElement)
     .on('load', () => {
       setActiveAdvertisementForm();
@@ -134,9 +97,9 @@ function initMap() {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(card);
   return card;
-}
+};
 
-function addOrdinaryMarkersToMap(data) {
+const addOrdinaryMarkersToMap = (data) => {
   const advertisementItems = data;
   const ordinaryIcon = L.icon({
     iconUrl: ORD_ICON_URL,
@@ -159,30 +122,62 @@ function addOrdinaryMarkersToMap(data) {
       .addTo(markerGroup)
       .bindPopup(generateSimilarAdvertisement(advertisement));
   });
-}
+};
 
-export function initMapState() {
+const changeFilterHandler = () => {
+  let resultData = [];
+  markerGroup.clearLayers();
+  if (storage.adeverts) {
+    resultData = getFilteredData(storage.adeverts.filter(getFilter));
+    addOrdinaryMarkersToMap(resultData);
+  }
+};
+
+export const initMapState = () =>{
   const filteredData = getFilteredData(storage.adeverts);
   addOrdinaryMarkersToMap(filteredData);
   setActiveMapFilters();
-}
+};
 
-export function setMarker() {
+export const setMarker = () => {
   mainMarker.setLatLng({
     lat: CENTER_LAT,
     lng: CENTER_LNG,
   });
-}
+};
 
-export function setMapView() {
+export const setMapView = () =>{
   map.setView({
     lng: CENTER_LNG,
     lat: CENTER_LAT,
   },
   SCALE);
-}
+};
 
-export function closeMapPopup() {
+export const closeMapPopup = () =>{
   map.closePopup();
-}
+};
+
+export const initMap = () =>{
+  mainMarker = setMainMarkerSettings();
+  map = createMap();
+  markerGroup = L.layerGroup().addTo(map);
+  mainMarker.addTo(map);
+  mainMarker.on('moveend', (evt) => {
+    const coordinate = evt.target.getLatLng();
+    coordinateElement.value = `${(coordinate.lat).toFixed(MAX_DIGITS)}; ${coordinate.lng.toFixed(MAX_DIGITS)}`;
+  });
+  housingTypeElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingPriceElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingRoomsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingGuestsElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+  housingFeaturesContainerElement.addEventListener('change', debounce(changeFilterHandler, RENDER_DELAY));
+};
+
+export const renderMapElemens = (data) => {
+  if (data) {
+    setAdverts(data);
+    initMapState();
+  }
+};
 

@@ -20,57 +20,11 @@ const defaultConfig = {
 };
 const pristine = new Pristine(formElement, defaultConfig);
 
-function selectFieldChangedHandler() {
+const selectFieldChangedHandler = () => {
   pristine.validate([advertismentRoomElement, advertismentGuestElement]);
-}
-advertismentRoomElement.addEventListener('change', selectFieldChangedHandler);
-advertismentGuestElement.addEventListener('change', selectFieldChangedHandler);
-validFieldsByPristine();
+};
 
-noUiSlider.create(advertismentSliderElement, setSliderSettings());
-advertismentSliderElement.noUiSlider.on('update', () => {
-  advertismentPriceElement.value = advertismentSliderElement.noUiSlider.get();
-});
-
-advertismentPriceElement.addEventListener('change', changePriceHandler);
-advertismentTypeElement.addEventListener('change', changeTypeHandler);
-advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
-advertismentTimeoutElement.addEventListener('change', setAppropriateTimeoutValueHander);
-
-function validFieldsByPristine(){
-  pristine.addValidator(
-    advertismentRoomElement,
-    validateGuestsByRoom,
-    getMessageByValidatingGuestByRoom
-  );
-
-  pristine.addValidator(
-    advertismentGuestElement,
-    validateGuestsByRoom,
-    getMessageByValidatingGuestByRoom
-  );
-
-  pristine.addValidator(
-    advertismentTitleElement,
-    validateTitleLenght,
-    'Длина не меньше 30 и не больше 100 символов'
-  );
-
-  pristine.addValidator(
-    advertismentPriceElement,
-    validatePrice,
-    'Максимальное значение — 100000'
-  );
-
-  pristine.addValidator(
-    advertismentPriceElement,
-    validatePriceByType,
-    getMessageByValidatePrice
-  );
-
-}
-
-function getMessageByValidatePrice(value) {
+const getMessageByValidatePrice = (value) => {
   const type = advertismentTypeElement.value;
   if (type === 'bungalow' && value < 0) {
     return 'Минимальная цена для Бунгало - 0 рублей';
@@ -83,9 +37,9 @@ function getMessageByValidatePrice(value) {
   } else if (type === 'palace' && value < 10000) {
     return 'Минимальная цена для Дворца - 10000 рублей';
   }
-}
+};
 
-function validatePriceByType(value) {
+const validatePriceByType = (value) => {
   const type = advertismentTypeElement.value;
   if (type === 'bungalow' && value >= 0) {
     return true;
@@ -97,43 +51,28 @@ function validatePriceByType(value) {
     return true;
   } else if (type === 'palace' && value >= 10000) {
     return true;
-  } else {
-    return false;
   }
-}
+};
 
-function setSliderSettings() {
-  return {
-    range: {
-      min: 0,
-      max: 100000,
-    },
-    start: 0,
-    step: 1,
-    connect: 'lower',
-    format: {
-      to: function (value) {
-        return value.toFixed(0);
-      },
-      from: function (value) {
-        return parseFloat(value);
-      },
-    },
-  };
-}
+const setSliderSettings = () => ({
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  start: 0,
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: (value) => value.toFixed(0),
+    from: (value) => parseFloat(value),
+  },
+});
 
-function changePriceHandler() {
+const changePriceHandler = () => {
   advertismentSliderElement.noUiSlider.set(advertismentPriceElement.value);
-}
+};
 
-function changeTypeHandler(evt) {
-  clearPristineErrorMessage();
-  const value = getSliderOptions(evt.target.value);
-  advertismentSliderElement.noUiSlider.updateOptions(value);
-  advertismentPriceElement.placeholder = value.start;
-}
-
-function getSliderOptions(value) {
+const getSliderOptions = (value) => {
   switch(value) {
     case 'bungalow':
       return {
@@ -181,19 +120,26 @@ function getSliderOptions(value) {
         step: 1
       };
   }
-}
+};
 
-function setAppropriateTimeinValueHander() {
+const changeTypeHandler = (evt) => {
+  clearPristineErrorMessage();
+  const value = getSliderOptions(evt.target.value);
+  advertismentSliderElement.noUiSlider.updateOptions(value);
+  advertismentPriceElement.placeholder = value.start;
+};
+
+const setAppropriateTimeinValueHander = () =>{
   const timein = advertismentTimeinElement.value;
   advertismentTimeoutElement.value = timein;
-}
+};
 
-function setAppropriateTimeoutValueHander() {
+const setAppropriateTimeoutValueHander = () => {
   const timeout = advertismentTimeoutElement.value;
   advertismentTimeinElement.value = timeout;
-}
+};
 
-function getMessageByValidatingGuestByRoom() {
+const getMessageByValidatingGuestByRoom = () => {
   const roomValue = +advertismentRoomElement.value;
   const guestValue = +advertismentGuestElement.value;
   let message = '';
@@ -207,9 +153,9 @@ function getMessageByValidatingGuestByRoom() {
     message = 'Корректный варинат выбора: 100 комнат — «не для гостей»';
   }
   return message;
-}
+};
 
-function validateGuestsByRoom() {
+const validateGuestsByRoom = () => {
   const roomValue = +advertismentRoomElement.value;
   const guestValue = +advertismentGuestElement.value;
   const roomForGuest = (roomValue === 1 && guestValue === 1);
@@ -218,6 +164,52 @@ function validateGuestsByRoom() {
   const hundredRoomsNotForGuests = (roomValue === 100 && guestValue === 0);
   const isMatched = roomForGuest || twoRoomsForGuests || threeRoomsForGuests || hundredRoomsNotForGuests;
   return isMatched;
-}
+};
+
+const validFieldsByPristine = () =>{
+  pristine.addValidator(
+    advertismentRoomElement,
+    validateGuestsByRoom,
+    getMessageByValidatingGuestByRoom
+  );
+
+  pristine.addValidator(
+    advertismentGuestElement,
+    validateGuestsByRoom,
+    getMessageByValidatingGuestByRoom
+  );
+
+  pristine.addValidator(
+    advertismentTitleElement,
+    validateTitleLenght,
+    'Длина не меньше 30 и не больше 100 символов'
+  );
+
+  pristine.addValidator(
+    advertismentPriceElement,
+    validatePrice,
+    'Максимальное значение — 100000'
+  );
+
+  pristine.addValidator(
+    advertismentPriceElement,
+    validatePriceByType,
+    getMessageByValidatePrice
+  );
+};
+
+advertismentRoomElement.addEventListener('change', selectFieldChangedHandler);
+advertismentGuestElement.addEventListener('change', selectFieldChangedHandler);
+validFieldsByPristine();
+
+noUiSlider.create(advertismentSliderElement, setSliderSettings());
+advertismentSliderElement.noUiSlider.on('update', () => {
+  advertismentPriceElement.value = advertismentSliderElement.noUiSlider.get();
+});
+
+advertismentPriceElement.addEventListener('change', changePriceHandler);
+advertismentTypeElement.addEventListener('change', changeTypeHandler);
+advertismentTimeinElement.addEventListener('change', setAppropriateTimeinValueHander);
+advertismentTimeoutElement.addEventListener('change', setAppropriateTimeoutValueHander);
 
 export { pristine };

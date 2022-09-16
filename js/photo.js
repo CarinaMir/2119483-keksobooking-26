@@ -5,25 +5,25 @@ const avatarPreviewElement = document.querySelector('.ad-form-header__preview im
 const realEstateChooserElement = document.querySelector('.ad-form__upload input[type=file]');
 const realEstatePhotoElement = document.querySelector('.ad-form__photo');
 
-function changeAvatarPhotoHandler() {
+const changeAvatarPhotoHandler = () => {
   setPhoto(avatarChooserElement, avatarPreviewElement);
-}
+};
 
-function changeRealEstatePhotoHandler() {
+const changeRealEstatePhotoHandler = () => {
   const imgItem = document.createElement('img');
   imgItem.classList.add('ad-form__preview_img');
   realEstatePhotoElement.appendChild(imgItem);
   const realEstatePreviewElements = document.querySelectorAll('.ad-form__photo img');
   const realEstatePreviewLastElement = realEstatePreviewElements.length - 1;
   setPhoto(realEstateChooserElement, realEstatePreviewElements[realEstatePreviewLastElement]);
-}
+};
 
-export function setImagesToForm() {
+export const setImagesToForm = () => {
   avatarChooserElement.addEventListener('change', changeAvatarPhotoHandler);
   realEstateChooserElement.addEventListener('change', changeRealEstatePhotoHandler);
-}
+};
 
-export function clearPreviewImg() {
+export const clearPreviewImg = () => {
   const realEstatePreviewElements = document.querySelectorAll('.ad-form__photo img');
   realEstateChooserElement.value = '';
   avatarChooserElement.value = '';
@@ -31,4 +31,4 @@ export function clearPreviewImg() {
   if (realEstatePreviewElements){
     realEstatePreviewElements.forEach((previewItem) => {realEstatePhotoElement.removeChild(previewItem);});
   }
-}
+};
