@@ -1,19 +1,17 @@
 import { realEstateTypes } from './constants.js';
 
-function getNameByRoomCount(value){
+const getNameByRoomCount = (value) =>{
   if (value === 1){
     return 'комната';
   } else if (value < 5){
     return 'комнаты';
   }
   return 'комнат';
-}
+};
 
-function getNameByGuestCount(value){
-  return value === 1 ? 'гостя' : 'гостей';
-}
+const getNameByGuestCount = (value) => value === 1 ? 'гостя' : 'гостей';
 
-function getPhotos(photos) {
+const getPhotos = (photos) => {
   const fragment = document.createDocumentFragment();
   if (photos){
     photos.forEach((photo) => {
@@ -26,9 +24,9 @@ function getPhotos(photos) {
     });
   }
   return fragment;
-}
+};
 
-export function generateSimilarAdvertisement(item) {
+export const generateSimilarAdvertisement = (item) => {
   const advertisementTemplateElement = document.querySelector('#card');
   const advertisementContainerElement = document.createElement('div');
   const advertisementItemElement = advertisementTemplateElement.cloneNode(true);
@@ -59,4 +57,4 @@ export function generateSimilarAdvertisement(item) {
   advertisementItemContent.querySelector('.popup__avatar').src = item.author.avatar || '';
   advertisementContainerElement.appendChild(advertisementItemContent);
   return advertisementContainerElement;
-}
+};
